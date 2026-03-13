@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Keyboard Puzzle</title>
+<link rel="icon" href="icon.ico" type="image/x-icon">
+<title>Keyboard Puzzle | Ektakto Games</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -32,6 +33,41 @@
   .fly-off-cap {
     animation: flyOff 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
     animation-delay: var(--delay);
+  }
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  .coming-soon-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 20px 16px;
+    min-width: 140px;
+    max-width: 160px;
+    flex: 1;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+  .coming-soon-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255,255,255,0.15);
+  }
+  .coming-soon-badge {
+    display: inline-block;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: linear-gradient(90deg, rgba(233,69,96,0.2), rgba(245,197,66,0.2), rgba(233,69,96,0.2));
+    background-size: 200% 100%;
+    animation: shimmer 3s ease infinite;
+    color: #f5c542;
+    border: 1px solid rgba(245,197,66,0.2);
   }
 </style>
 </head>
@@ -253,8 +289,21 @@ function KeyboardPuzzle() {
     return g;
   }
 
-  const onDragStartFromTray = (e, flatIdx, key) => { e.dataTransfer.setData("text/plain", key); e.dataTransfer.effectAllowed = "move"; setDragging(key); setDragSource({ type: "tray", flatIdx }); };
-  const onDragStartFromSlot = (e, slotId, key) => { e.dataTransfer.setData("text/plain", key); e.dataTransfer.effectAllowed = "move"; setDragging(key); setDragSource({ type: "slot", slotId }); };
+  const dragRef = useRef({ key: null, source: null });
+  const onDragStartFromTray = (e, flatIdx, key) => {
+    e.dataTransfer.setData("text/plain", key);
+    e.dataTransfer.effectAllowed = "move";
+    dragRef.current = { key, source: { type: "tray", flatIdx } };
+    // Defer state update so React doesn't re-render and kill the drag
+    setTimeout(() => { setDragging(key); setDragSource({ type: "tray", flatIdx }); }, 0);
+  };
+  const onDragStartFromSlot = (e, slotId, key) => {
+    e.dataTransfer.setData("text/plain", key);
+    e.dataTransfer.effectAllowed = "move";
+    dragRef.current = { key, source: { type: "slot", slotId } };
+    setTimeout(() => { setDragging(key); setDragSource({ type: "slot", slotId }); }, 0);
+  };
+  const onDragEnd = () => { dragRef.current = { key: null, source: null }; setDragging(null); setDragSource(null); setHoverSlot(null); };
 
   const placeKey = (targetSlotId, sourceType, flatIdx, sourceSlotId, key) => {
     const existing = placed[targetSlotId];
@@ -274,16 +323,20 @@ function KeyboardPuzzle() {
   };
 
   const onDropOnSlot = (slotId) => {
-    if (!dragging || checked) return;
-    placeKey(slotId, dragSource.type, dragSource.flatIdx, dragSource.slotId, dragging);
+    const d = dragRef.current;
+    if (!d.key || checked) return;
+    placeKey(slotId, d.source.type, d.source.flatIdx, d.source.slotId, d.key);
+    dragRef.current = { key: null, source: null };
     setDragging(null); setDragSource(null); setHoverSlot(null);
   };
   const onDropOnTray = () => {
-    if (!dragging || checked) return;
-    if (dragSource.type === "slot") {
-      let np = { ...placed }; delete np[dragSource.slotId]; setPlaced(np);
-      setTrayGroups(addTrayItem(dragging));
+    const d = dragRef.current;
+    if (!d.key || checked) return;
+    if (d.source.type === "slot") {
+      let np = { ...placed }; delete np[d.source.slotId]; setPlaced(np);
+      setTrayGroups(addTrayItem(d.key));
     }
+    dragRef.current = { key: null, source: null };
     setDragging(null); setDragSource(null);
   };
 
@@ -349,6 +402,7 @@ function KeyboardPuzzle() {
     return (
       <div draggable={!isMobile}
         onDragStart={(e) => onDragStartFromTray(e, flatIdx, keyLabel)}
+        onDragEnd={onDragEnd}
         onClick={(e) => { e.stopPropagation(); onTapTrayKey(flatIdx, keyLabel); }}
         style={{
           width: keyW, height: keyH, borderRadius: Math.round(7 * scale),
@@ -381,7 +435,7 @@ function KeyboardPuzzle() {
         : isWrong ? "0 3px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.3), inset 0 -2px 3px rgba(0,0,0,0.15)"
         : "0 4px 6px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.95), inset 0 -2px 3px rgba(0,0,0,0.08)",
       textShadow: result ? "0 1px 2px rgba(0,0,0,0.3)" : "none",
-      userSelect: "none", letterSpacing: "0.5px", pointerEvents: "none",
+      userSelect: "none", letterSpacing: "0.5px",
       borderTop: result ? "none" : "1px solid rgba(255,255,255,0.9)",
       borderBottom: result ? "none" : "2px solid rgba(0,0,0,0.15)"
     };
@@ -389,40 +443,91 @@ function KeyboardPuzzle() {
 
   // ==================== START SCREEN ====================
   if (phase === "menu") {
+    const comingSoon = [
+      { emoji: "\uD83D\uDD20", name: "Word Scramble", desc: "Unscramble letters against the clock" },
+      { emoji: "\uD83E\uDDE0", name: "Memory Match", desc: "Flip and pair hidden cards" },
+      { emoji: "\u26A1", name: "Speed Typer", desc: "Race to type passages accurately" },
+      { emoji: "\uD83C\uDFA8", name: "Color Codes", desc: "Crack the color pattern sequence" }
+    ];
     return (
-      <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-        background: "linear-gradient(135deg, "+C.bg+" 0%, #0d1b2a 100%)", color: C.textLight, padding: 20 }}>
-        <div style={{ textAlign: "center", maxWidth: 600 }}>
-          <div style={{ fontSize: 64, marginBottom: 8 }}>{"\u2328\uFE0F"}</div>
-          <h1 style={{ fontSize: "clamp(28px, 7vw, 42px)", fontWeight: 700, margin: "0 0 12px" }}>Keyboard Puzzle</h1>
-          <p style={{ fontSize: "clamp(14px, 3.5vw, 18px)", color: C.textMuted, margin: "0 0 48px", lineHeight: 1.6 }}>
+      <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center",
+        background: "linear-gradient(135deg, "+C.bg+" 0%, #0d1b2a 100%)", color: C.textLight, padding: "24px 20px 40px" }}>
+
+        {/* Logo */}
+        <div style={{ marginBottom: 8, marginTop: 12 }}>
+          <img src="logo.PNG" alt="Ektakto Games" style={{ height: "clamp(48px, 10vw, 80px)", width: "auto", objectFit: "contain" }} />
+        </div>
+
+        {/* Tagline */}
+        <p style={{ fontSize: "clamp(11px, 2.5vw, 14px)", color: C.textMuted, margin: "0 0 40px", letterSpacing: 2, textTransform: "uppercase" }}>
+          Brain Games &amp; Puzzles
+        </p>
+
+        {/* Featured Game Card */}
+        <div style={{
+          width: "100%", maxWidth: 580, background: "rgba(255,255,255,0.04)",
+          border: "1px solid rgba(255,255,255,0.1)", borderRadius: 20,
+          padding: "clamp(24px, 4vw, 36px)", textAlign: "center", marginBottom: 48,
+          boxShadow: "0 8px 40px rgba(0,0,0,0.3)"
+        }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginBottom: 4 }}>
+            <span style={{ fontSize: "clamp(10px, 2vw, 12px)", fontWeight: 700, textTransform: "uppercase",
+              letterSpacing: 2, color: C.accent, opacity: 0.9 }}>Featured Game</span>
+          </div>
+          <div style={{ fontSize: "clamp(36px, 8vw, 52px)", marginBottom: 4 }}>{"\u2328\uFE0F"}</div>
+          <h2 style={{ fontSize: "clamp(24px, 6vw, 36px)", fontWeight: 700, margin: "0 0 8px" }}>Keyboard Puzzle</h2>
+          <p style={{ fontSize: "clamp(13px, 3vw, 16px)", color: C.textMuted, margin: "0 0 28px", lineHeight: 1.6 }}>
             All the keycaps fell off! Drag or tap each key back to its correct position. Think you know your layout?
           </p>
-          <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}>
+          <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
             <button onClick={() => startGame("pc")} style={{
-              background: "linear-gradient(135deg, #1a5276, #2980b9)", color: "#fff", border: "none", borderRadius: 16,
-              padding: "28px 36px", cursor: "pointer", fontSize: 18, fontWeight: 600, boxShadow: "0 4px 20px rgba(41,128,185,0.3)",
-              display: "flex", flexDirection: "column", alignItems: "center", gap: 8, minWidth: 160
-            }}>
-              <span style={{ fontSize: 36 }}>{"\uD83D\uDDA5\uFE0F"}</span><span>PC Layout</span>
-              <span style={{ fontSize: 12, fontWeight: 400, opacity: 0.8 }}>Windows / Standard</span>
-              {bestTimes.pc && <span style={{ fontSize: 11, opacity: 0.7, marginTop: 4 }}>Best: {formatTime(bestTimes.pc)}</span>}
+              background: "linear-gradient(135deg, #1a5276, #2980b9)", color: "#fff", border: "none", borderRadius: 14,
+              padding: "22px 32px", cursor: "pointer", fontSize: 16, fontWeight: 600, boxShadow: "0 4px 20px rgba(41,128,185,0.3)",
+              display: "flex", flexDirection: "column", alignItems: "center", gap: 6, minWidth: 150, transition: "transform 0.15s ease"
+            }} onMouseEnter={e => e.currentTarget.style.transform="translateY(-2px)"} onMouseLeave={e => e.currentTarget.style.transform="none"}>
+              <span style={{ fontSize: 30 }}>{"\uD83D\uDDA5\uFE0F"}</span><span>PC Layout</span>
+              <span style={{ fontSize: 11, fontWeight: 400, opacity: 0.8 }}>Windows / Standard</span>
+              {bestTimes.pc && <span style={{ fontSize: 10, opacity: 0.7, marginTop: 2 }}>Best: {formatTime(bestTimes.pc)}</span>}
             </button>
             <button onClick={() => startGame("mac")} style={{
-              background: "linear-gradient(135deg, #2c3e50, #4a4a4a)", color: "#fff", border: "none", borderRadius: 16,
-              padding: "28px 36px", cursor: "pointer", fontSize: 18, fontWeight: 600, boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
-              display: "flex", flexDirection: "column", alignItems: "center", gap: 8, minWidth: 160
-            }}>
-              <span style={{ fontSize: 36 }}>{"\uD83C\uDF4E"}</span><span>Mac Layout</span>
-              <span style={{ fontSize: 12, fontWeight: 400, opacity: 0.8 }}>Apple / macOS</span>
-              {bestTimes.mac && <span style={{ fontSize: 11, opacity: 0.7, marginTop: 4 }}>Best: {formatTime(bestTimes.mac)}</span>}
+              background: "linear-gradient(135deg, #2c3e50, #4a4a4a)", color: "#fff", border: "none", borderRadius: 14,
+              padding: "22px 32px", cursor: "pointer", fontSize: 16, fontWeight: 600, boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
+              display: "flex", flexDirection: "column", alignItems: "center", gap: 6, minWidth: 150, transition: "transform 0.15s ease"
+            }} onMouseEnter={e => e.currentTarget.style.transform="translateY(-2px)"} onMouseLeave={e => e.currentTarget.style.transform="none"}>
+              <span style={{ fontSize: 30 }}>{"\uD83C\uDF4E"}</span><span>Mac Layout</span>
+              <span style={{ fontSize: 11, fontWeight: 400, opacity: 0.8 }}>Apple / macOS</span>
+              {bestTimes.mac && <span style={{ fontSize: 10, opacity: 0.7, marginTop: 2 }}>Best: {formatTime(bestTimes.mac)}</span>}
             </button>
           </div>
           {/* Sound toggle */}
           <button onClick={() => setSoundOn(!soundOn)} style={{
-            marginTop: 32, background: "none", border: "1px solid rgba(255,255,255,0.15)",
-            color: C.textMuted, borderRadius: 8, padding: "6px 16px", cursor: "pointer", fontSize: 13
+            marginTop: 24, background: "none", border: "1px solid rgba(255,255,255,0.12)",
+            color: C.textMuted, borderRadius: 8, padding: "5px 14px", cursor: "pointer", fontSize: 12
           }}>{soundOn ? "\uD83D\uDD0A Sound On" : "\uD83D\uDD07 Sound Off"}</button>
+        </div>
+
+        {/* More Games Coming Soon */}
+        <div style={{ width: "100%", maxWidth: 700, textAlign: "center" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12, marginBottom: 20 }}>
+            <div style={{ height: 1, flex: 1, maxWidth: 80, background: "rgba(255,255,255,0.1)" }} />
+            <span className="coming-soon-badge">Coming Soon</span>
+            <div style={{ height: 1, flex: 1, maxWidth: 80, background: "rgba(255,255,255,0.1)" }} />
+          </div>
+          <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+            {comingSoon.map((g, i) => (
+              <div key={i} className="coming-soon-card">
+                <div style={{ fontSize: 28, marginBottom: 8 }}>{g.emoji}</div>
+                <div style={{ fontSize: 14, fontWeight: 600, color: C.textLight, marginBottom: 4 }}>{g.name}</div>
+                <div style={{ fontSize: 11, color: C.textMuted, lineHeight: 1.4 }}>{g.desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div style={{ marginTop: 48, textAlign: "center", opacity: 0.4, fontSize: 12, color: C.textMuted }}>
+          <a href="https://ektakgames.com" target="_blank" rel="noopener noreferrer"
+            style={{ color: C.textMuted, textDecoration: "none" }}>ektakgames.com</a>
         </div>
       </div>
     );
@@ -432,9 +537,10 @@ function KeyboardPuzzle() {
   if (phase === "intro" || phase === "flyoff") {
     return (
       <div style={{ minHeight: "100vh", background: "linear-gradient(135deg, "+C.bg+" 0%, #0d1b2a 100%)",
-        color: C.textLight, padding: "60px 12px 32px", display: "flex", flexDirection: "column", alignItems: "center" }}>
+        color: C.textLight, padding: "24px 12px 32px", display: "flex", flexDirection: "column", alignItems: "center" }}>
+        <img src="logo.PNG" alt="Ektakto Games" style={{ height: 36, width: "auto", objectFit: "contain", marginBottom: 16, opacity: 0.6 }} />
         <h2 style={{ margin: "0 0 8px", fontSize: "clamp(18px, 4vw, 24px)", fontWeight: 600 }}>
-          {"\u2328\uFE0F"} {mode === "mac" ? "Mac" : "PC"} Keyboard
+          {"\u2328\uFE0F"} {mode === "mac" ? "Mac" : "PC"} Keyboard Puzzle
         </h2>
         <div style={{ fontSize: 14, color: C.textMuted, marginBottom: 24 }}>
           {phase === "intro" ? "Look at the keyboard..." : "Oh no! The keycaps flew off!"}
@@ -503,11 +609,15 @@ function KeyboardPuzzle() {
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%", maxWidth: 960, marginBottom: 16, gap: 8 }}>
         <button onClick={resetGame} style={{
           background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.15)",
-          color: C.textLight, borderRadius: 10, padding: "6px 14px", cursor: "pointer", fontSize: 13, fontWeight: 500, whiteSpace: "nowrap"
-        }}>{"\u2190"} Back</button>
+          color: C.textLight, borderRadius: 10, padding: "6px 14px", cursor: "pointer", fontSize: 13, fontWeight: 500, whiteSpace: "nowrap",
+          display: "flex", alignItems: "center", gap: 6
+        }}>
+          <img src="logo.PNG" alt="" style={{ height: 16, width: "auto", opacity: 0.7 }} />
+          <span>{"\u2190"} Games</span>
+        </button>
         <div style={{ textAlign: "center", flex: 1, minWidth: 0 }}>
           <h2 style={{ margin: 0, fontSize: "clamp(16px, 4vw, 22px)", fontWeight: 600 }}>
-            {"\u2328\uFE0F"} {mode === "mac" ? "Mac" : "PC"} Keyboard
+            {"\u2328\uFE0F"} {mode === "mac" ? "Mac" : "PC"} Keyboard Puzzle
           </h2>
           <div style={{ fontSize: 12, color: C.textMuted, marginTop: 2 }}>
             {selected ? "Tap a slot to place the key" : tray.length + " keys remaining"}
@@ -579,6 +689,7 @@ function KeyboardPuzzle() {
                   {pk && (
                     <div draggable={!checked && !isMobile}
                       onDragStart={(e) => { e.stopPropagation(); onDragStartFromSlot(e, slotId, pk); }}
+                      onDragEnd={onDragEnd}
                       style={capStyle(w, result, isWrong, isSel)}
                     >{pk}</div>
                   )}
@@ -606,7 +717,7 @@ function KeyboardPuzzle() {
           {!perfect && <div style={{ fontSize: 12, color: C.textMuted, marginTop: 6, opacity: 0.7 }}>Hover or tap wrong keys to see the correct answer</div>}
           <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 16, flexWrap: "wrap" }}>
             <button onClick={tryAgain} style={{ background: C.accent, color: "#fff", border: "none", borderRadius: 10, padding: "10px 24px", cursor: "pointer", fontSize: 15, fontWeight: 600 }}>Try Again</button>
-            <button onClick={resetGame} style={{ background: "rgba(255,255,255,0.1)", color: C.textLight, border: "1px solid rgba(255,255,255,0.15)", borderRadius: 10, padding: "10px 24px", cursor: "pointer", fontSize: 15, fontWeight: 500 }}>Switch Layout</button>
+            <button onClick={resetGame} style={{ background: "rgba(255,255,255,0.1)", color: C.textLight, border: "1px solid rgba(255,255,255,0.15)", borderRadius: 10, padding: "10px 24px", cursor: "pointer", fontSize: 15, fontWeight: 500 }}>All Games</button>
           </div>
         </div>
       )}
