@@ -38,23 +38,6 @@
     0% { background-position: -200% 0; }
     100% { background-position: 200% 0; }
   }
-  .coming-soon-card {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 14px;
-    padding: 20px 16px;
-    min-width: 140px;
-    max-width: 160px;
-    flex: 1;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.2s ease, border-color 0.2s ease;
-  }
-  .coming-soon-card:hover {
-    transform: translateY(-2px);
-    border-color: rgba(255,255,255,0.15);
-  }
   .coming-soon-badge {
     display: inline-block;
     font-size: 9px;
@@ -443,12 +426,6 @@ function KeyboardPuzzle() {
 
   // ==================== START SCREEN ====================
   if (phase === "menu") {
-    const comingSoon = [
-      { emoji: "\uD83D\uDD20", name: "Word Scramble", desc: "Unscramble letters against the clock" },
-      { emoji: "\uD83E\uDDE0", name: "Memory Match", desc: "Flip and pair hidden cards" },
-      { emoji: "\u26A1", name: "Speed Typer", desc: "Race to type passages accurately" },
-      { emoji: "\uD83C\uDFA8", name: "Color Codes", desc: "Crack the color pattern sequence" }
-    ];
     return (
       <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center",
         background: "linear-gradient(135deg, "+C.bg+" 0%, #0d1b2a 100%)", color: C.textLight, padding: "24px 20px 40px" }}>
@@ -508,20 +485,14 @@ function KeyboardPuzzle() {
 
         {/* More Games Coming Soon */}
         <div style={{ width: "100%", maxWidth: 700, textAlign: "center" }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12, marginBottom: 20 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12, marginBottom: 12 }}>
             <div style={{ height: 1, flex: 1, maxWidth: 80, background: "rgba(255,255,255,0.1)" }} />
             <span className="coming-soon-badge">Coming Soon</span>
             <div style={{ height: 1, flex: 1, maxWidth: 80, background: "rgba(255,255,255,0.1)" }} />
           </div>
-          <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-            {comingSoon.map((g, i) => (
-              <div key={i} className="coming-soon-card">
-                <div style={{ fontSize: 28, marginBottom: 8 }}>{g.emoji}</div>
-                <div style={{ fontSize: 14, fontWeight: 600, color: C.textLight, marginBottom: 4 }}>{g.name}</div>
-                <div style={{ fontSize: 11, color: C.textMuted, lineHeight: 1.4 }}>{g.desc}</div>
-              </div>
-            ))}
-          </div>
+          <p style={{ fontSize: "clamp(12px, 2.5vw, 14px)", color: C.textMuted, lineHeight: 1.6 }}>
+            More games are on the way. Stay tuned!
+          </p>
         </div>
 
         {/* Footer */}
