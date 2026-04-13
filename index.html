@@ -2,790 +2,203 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<link rel="icon" href="icon.ico" type="image/x-icon">
-<title>Keyboard Puzzle | Ektakto Games</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ektak Games</title>
+<meta name="description" content="A small collection of browser puzzle games.">
+<link rel="icon" type="image/png" href="keyboard-puzzle/logo.png">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: 'SF Pro Display', -apple-system, 'Segoe UI', Roboto, sans-serif;
-    overflow-x: hidden;
-    -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background:
+      radial-gradient(ellipse at 20% 0%, #1b2a44 0%, transparent 55%),
+      radial-gradient(ellipse at 85% 100%, #241830 0%, transparent 55%),
+      #0a0f1a;
+    color: #e8eef5;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
   }
-  .tooltip {
-    position: absolute; top: -32px; left: 50%; transform: translateX(-50%);
-    background: rgba(0,0,0,0.85); color: #2ecc71; padding: 4px 10px;
-    border-radius: 6px; font-size: 11px; font-weight: 700;
-    white-space: nowrap; pointer-events: none; z-index: 10;
-    opacity: 0; transition: opacity 0.15s ease;
+  .wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 48px 24px 64px;
   }
-  .tooltip::after {
-    content: ""; position: absolute; top: 100%; left: 50%;
-    transform: translateX(-50%);
-    border: 5px solid transparent; border-top-color: rgba(0,0,0,0.85);
+  header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 44px;
   }
-  .slot-wrap:hover .tooltip, .slot-wrap:active .tooltip { opacity: 1; }
-  @keyframes flyOff {
-    0% { transform: translate(0,0) rotate(0deg); opacity: 1; }
-    100% { transform: translate(var(--fx), var(--fy)) rotate(var(--fr)); opacity: 0; }
+  header img.brand {
+    max-width: 440px;
+    width: 80%;
+    height: auto;
+    filter: drop-shadow(0 6px 24px rgba(0,0,0,0.6));
   }
-  .fly-off-cap {
-    animation: flyOff 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-    animation-delay: var(--delay);
+  header p.tagline {
+    margin: 14px 0 0 0;
+    color: #9fb2c7;
+    font-size: 17px;
+    letter-spacing: 0.3px;
   }
-  @keyframes shimmer {
-    0% { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
+
+  .games {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
   }
-  .coming-soon-badge {
-    display: inline-block;
-    font-size: 9px;
+  .card {
+    position: relative;
+    background: rgba(20, 32, 50, 0.65);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+    display: flex;
+    flex-direction: column;
+    backdrop-filter: blur(6px);
+  }
+  .card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(255,255,255,0.22);
+    box-shadow: 0 18px 40px rgba(0,0,0,0.45);
+  }
+  .card .thumb {
+    position: relative;
+    height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .card .thumb.strait {
+    background:
+      radial-gradient(ellipse at 30% 40%, #0d3a5c 0%, #06101c 80%);
+  }
+  .card .thumb.strait img {
+    max-width: 80%;
+    max-height: 82%;
+    filter: drop-shadow(0 6px 18px rgba(0,0,0,0.55));
+  }
+  .card .thumb.keyboard {
+    background:
+      radial-gradient(ellipse at 50% 50%, #1d1a0c 0%, #0b0906 80%);
+  }
+  .key-visual {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
     font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    padding: 3px 10px;
-    border-radius: 20px;
-    background: linear-gradient(90deg, rgba(233,69,96,0.2), rgba(245,197,66,0.2), rgba(233,69,96,0.2));
-    background-size: 200% 100%;
-    animation: shimmer 3s ease infinite;
-    color: #f5c542;
-    border: 1px solid rgba(245,197,66,0.2);
+    color: #f1c350;
+    letter-spacing: 2px;
+    font-size: 54px;
+    text-shadow:
+      0 2px 0 #8a6a1a,
+      0 4px 20px rgba(241, 195, 80, 0.35);
+    display: flex;
+    gap: 10px;
+  }
+  .key-visual .k {
+    display: inline-block;
+    padding: 10px 14px;
+    background: linear-gradient(#3a2d10, #1e1708);
+    border: 1px solid #8a6a1a;
+    border-radius: 8px;
+    box-shadow: 0 4px 0 #1a1206, 0 8px 18px rgba(0,0,0,0.5);
+  }
+
+  .card .body {
+    padding: 20px 22px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .card h2 {
+    margin: 0;
+    font-size: 22px;
+    letter-spacing: 0.3px;
+  }
+  .card .desc {
+    color: #a5b9cf;
+    font-size: 14px;
+    line-height: 1.45;
+    margin: 0;
+  }
+  .card .cta {
+    margin-top: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #7fc4ff;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .card .cta::after {
+    content: "\2192";
+    transition: transform 0.18s ease;
+  }
+  .card:hover .cta::after {
+    transform: translateX(4px);
+  }
+
+  footer {
+    margin-top: 56px;
+    text-align: center;
+    color: #6f869c;
+    font-size: 13px;
+  }
+  footer a {
+    color: #7fa3c9;
+    text-decoration: none;
+  }
+  footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 640px) {
+    .wrap { padding: 32px 16px 48px; }
+    .card .thumb { height: 180px; }
+    .key-visual { font-size: 40px; }
+    .key-visual .k { padding: 8px 11px; }
   }
 </style>
 </head>
 <body>
-<div id="root"></div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
-<script type="text/babel">
-const { useState, useRef, useEffect, useMemo, useCallback } = React;
+<div class="wrap">
+  <header>
+    <img class="brand" src="keyboard-puzzle/logo.png" alt="Ektak Games">
+    <p class="tagline">A small collection of browser puzzle games.</p>
+  </header>
 
-// ==================== SOUND ENGINE ====================
-const SFX = {
-  sounds: {},
-  loaded: false,
-  init() {
-    if (this.loaded) return;
-    this.sounds.scatter = new Audio("Sound%20Effects/Keycaps_Scatter.WAV");
-    this.sounds.place = new Audio("Sound%20Effects/Snap_into_Place.WAV");
-    this.sounds.results = new Audio("Sound%20Effects/Game_Results.mp3");
-    // Preload
-    Object.values(this.sounds).forEach(s => { s.load(); });
-    this.loaded = true;
-  },
-  play(type) {
-    const s = this.sounds[type];
-    if (!s) return;
-    s.currentTime = 0;
-    s.play().catch(() => {});
-  }
-};
-
-// ==================== CONSTANTS ====================
-const PC_ROWS = [
-  ["Esc","1","2","3","4","5","6","7","8","9","0","-","=","Backspace"],
-  ["Tab","Q","W","E","R","T","Y","U","I","O","P","[","]","\\"],
-  ["Caps","A","S","D","F","G","H","J","K","L",";","'","Enter"],
-  ["Shift","Z","X","C","V","B","N","M",",",".","/","Shift"],
-  ["Ctrl","Win","Alt","Space","Alt","Win","Menu","Ctrl"]
-];
-const EASY_ROWS = [
-  ["1","2","3","4","5","6","7","8","9","0"],
-  ["Q","W","E","R","T","Y","U","I","O","P"],
-  ["A","S","D","F","G","H","J","K","L"],
-  ["Z","X","C","V","B","N","M"]
-];
-const MAC_ROWS = [
-  ["Esc","1","2","3","4","5","6","7","8","9","0","-","=","Delete"],
-  ["Tab","Q","W","E","R","T","Y","U","I","O","P","[","]","\\"],
-  ["Caps","A","S","D","F","G","H","J","K","L",";","'","Return"],
-  ["Shift","Z","X","C","V","B","N","M",",",".","/","Shift"],
-  ["fn","\u2303","\u2325","\u2318","Space","\u2318","\u2325","\u2190","\u2192"]
-];
-const WIDE_KEYS = {
-  "Backspace": 2, "Delete": 2, "Tab": 1.5, "\\": 1.5, "Esc": 1,
-  "Caps": 1.8, "Enter": 2.2, "Return": 2.2,
-  "Shift": 2.5, "Space": 6,
-  "Ctrl": 1.5, "Win": 1.25, "Alt": 1.25, "Menu": 1.25,
-  "fn": 1, "\u2303": 1.25, "\u2325": 1.25, "\u2318": 1.5, "\u2190": 1, "\u2192": 1
-};
-function getKeyWidth(key) { return WIDE_KEYS[key] || 1; }
-function getRowTotalWidth(row) { let t = 0; row.forEach(k => t += getKeyWidth(k)); return t; }
-
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
-  return a;
-}
-function buildSlots(rows) {
-  const s = []; rows.forEach((row, r) => row.forEach((key, c) => { s.push({ id: r+"-"+c, correctKey: key, row: r, col: c }); })); return s;
-}
-function buildGroupedKeycaps(rows) {
-  const letters = [], numbers = [], others = [];
-  rows.forEach(row => row.forEach(key => {
-    if (/^[A-Z]$/.test(key)) letters.push(key);
-    else if (/^[0-9]$/.test(key)) numbers.push(key);
-    else others.push(key);
-  }));
-  letters.sort();
-  numbers.sort((a, b) => parseInt(a) - parseInt(b));
-  return { letters, numbers, others: shuffle(others) };
-}
-function genScatterStyles(count, seed) {
-  const styles = []; let s = seed || 42;
-  function pr() { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; }
-  for (let i = 0; i < count; i++) {
-    styles.push({ rotation: (pr() - 0.5) * 14, offX: (pr() - 0.5) * 6, offY: (pr() - 0.5) * 6 });
-  }
-  return styles;
-}
-// Generate random fly-off destinations for each key
-function genFlyOffData(rows) {
-  const data = {};
-  rows.forEach((row, r) => row.forEach((key, c) => {
-    const id = r + "-" + c;
-    const angle = Math.random() * Math.PI * 2;
-    const dist = 300 + Math.random() * 500;
-    data[id] = {
-      fx: Math.cos(angle) * dist,
-      fy: -(200 + Math.random() * 400), // fly upward and out
-      fr: (Math.random() - 0.5) * 720,
-      delay: (r * 0.06) + (c * 0.02) + Math.random() * 0.1
-    };
-  }));
-  return data;
-}
-
-const C = {
-  bg: "#1a1a2e", board: "#16213e", slot: "#0f3460", slotHover: "#1a5276",
-  capText: "#1a1a2e", correct: "#2ecc71", incorrect: "#e74c3c",
-  accent: "#e94560", textLight: "#eee", textMuted: "#aaa", tray: "#0d1b2a",
-  selected: "#f5c542"
-};
-
-// ==================== MAIN COMPONENT ====================
-function KeyboardPuzzle() {
-  const [mode, setMode] = useState(null);
-  const [phase, setPhase] = useState("menu"); // "menu" | "intro" | "flyoff" | "playing"
-  const [slots, setSlots] = useState([]);
-  const [placed, setPlaced] = useState({});
-  const [trayGroups, setTrayGroups] = useState({ letters: [], numbers: [], others: [] });
-  const [dragging, setDragging] = useState(null);
-  const [dragSource, setDragSource] = useState(null);
-  const [hoverSlot, setHoverSlot] = useState(null);
-  const [checked, setChecked] = useState(false);
-  const [results, setResults] = useState({});
-  const [score, setScore] = useState(null);
-  const [timer, setTimer] = useState(0);
-  const [running, setRunning] = useState(false);
-  const [bestTimes, setBestTimes] = useState({ pc: null, mac: null, easy: null });
-  const [selected, setSelected] = useState(null);
-  const [scale, setScale] = useState(1);
-  const [hoveredWrong, setHoveredWrong] = useState(null);
-  const [flyData, setFlyData] = useState({});
-  const [soundOn, setSoundOn] = useState(true);
-  const intervalRef = useRef(null);
-  const scatterSeed = useRef(Math.floor(Math.random() * 10000));
-
-  const playSound = useCallback((type) => {
-    if (!soundOn) return;
-    SFX.play(type);
-  }, [soundOn]);
-
-  const tray = useMemo(() => {
-    return [...trayGroups.letters, ...trayGroups.numbers, ...trayGroups.others];
-  }, [trayGroups]);
-
-  const letterScatter = useMemo(() => genScatterStyles(trayGroups.letters.length, scatterSeed.current), [trayGroups.letters.length]);
-  const numberScatter = useMemo(() => genScatterStyles(trayGroups.numbers.length, scatterSeed.current + 1000), [trayGroups.numbers.length]);
-  const otherScatter = useMemo(() => genScatterStyles(trayGroups.others.length, scatterSeed.current + 2000), [trayGroups.others.length]);
-
-  // Responsive scaling
-  useEffect(() => {
-    function calcScale() {
-      if (!mode) return;
-      const rows = mode === "mac" ? MAC_ROWS : mode === "easy" ? EASY_ROWS : PC_ROWS;
-      const maxRowWidth = Math.max(...rows.map(r => getRowTotalWidth(r)));
-      const bw = maxRowWidth * 52 + 13 * 5 + 32;
-      setScale(Math.min(1, (window.innerWidth - 24) / bw));
-    }
-    calcScale();
-    window.addEventListener("resize", calcScale);
-    return () => window.removeEventListener("resize", calcScale);
-  }, [mode]);
-
-  useEffect(() => {
-    if (running) { intervalRef.current = setInterval(() => setTimer(t => t + 1), 1000); }
-    return () => clearInterval(intervalRef.current);
-  }, [running]);
-
-  const formatTime = (s) => Math.floor(s/60) + ":" + (s%60).toString().padStart(2,"0");
-
-  const startGame = (m) => {
-    SFX.init(); // preload sounds on user gesture
-    const rows = m === "mac" ? MAC_ROWS : m === "easy" ? EASY_ROWS : PC_ROWS;
-    setMode(m);
-    setSlots(buildSlots(rows));
-    setPlaced({});
-    setTrayGroups({ letters: [], numbers: [], others: [] });
-    scatterSeed.current = Math.floor(Math.random() * 10000);
-    setDragging(null); setDragSource(null); setHoverSlot(null);
-    setChecked(false); setResults({}); setScore(null);
-    setTimer(0); setRunning(false); setSelected(null); setHoveredWrong(null);
-    // Phase 1: show complete keyboard
-    setPhase("intro");
-    // Phase 2: after 2s, fly off
-    setTimeout(() => {
-      setFlyData(genFlyOffData(rows));
-      setPhase("flyoff");
-      playSound("scatter");
-    }, 2000);
-    // Phase 3: after fly animation, start playing
-    setTimeout(() => {
-      setPhase("playing");
-      setTrayGroups(buildGroupedKeycaps(rows));
-      setRunning(true);
-    }, 3200);
-  };
-
-  const resetGame = () => { setMode(null); setPhase("menu"); setRunning(false); clearInterval(intervalRef.current); setSelected(null); };
-
-  function findTrayGroupIndex(flatIdx) {
-    const lLen = trayGroups.letters.length, nLen = trayGroups.numbers.length;
-    if (flatIdx < lLen) return { group: "letters", idx: flatIdx };
-    if (flatIdx < lLen + nLen) return { group: "numbers", idx: flatIdx - lLen };
-    return { group: "others", idx: flatIdx - lLen - nLen };
-  }
-  function removeTrayItem(flatIdx) {
-    const loc = findTrayGroupIndex(flatIdx);
-    const ng = { letters: [...trayGroups.letters], numbers: [...trayGroups.numbers], others: [...trayGroups.others] };
-    ng[loc.group].splice(loc.idx, 1); return ng;
-  }
-  function addTrayItem(key) {
-    const ng = { letters: [...trayGroups.letters], numbers: [...trayGroups.numbers], others: [...trayGroups.others] };
-    if (/^[A-Z]$/.test(key)) { ng.letters.push(key); ng.letters.sort(); }
-    else if (/^[0-9]$/.test(key)) { ng.numbers.push(key); ng.numbers.sort((a,b)=>parseInt(a)-parseInt(b)); }
-    else { ng.others.push(key); }
-    return ng;
-  }
-  function addTrayItemToGroups(groups, key) {
-    const g = { letters: [...groups.letters], numbers: [...groups.numbers], others: [...groups.others] };
-    if (/^[A-Z]$/.test(key)) { g.letters.push(key); g.letters.sort(); }
-    else if (/^[0-9]$/.test(key)) { g.numbers.push(key); g.numbers.sort((a,b)=>parseInt(a)-parseInt(b)); }
-    else { g.others.push(key); }
-    return g;
-  }
-
-  const dragRef = useRef({ key: null, source: null });
-  const onDragStartFromTray = (e, flatIdx, key) => {
-    e.dataTransfer.setData("text/plain", key);
-    e.dataTransfer.effectAllowed = "move";
-    dragRef.current = { key, source: { type: "tray", flatIdx } };
-    // Defer state update so React doesn't re-render and kill the drag
-    setTimeout(() => { setDragging(key); setDragSource({ type: "tray", flatIdx }); }, 0);
-  };
-  const onDragStartFromSlot = (e, slotId, key) => {
-    e.dataTransfer.setData("text/plain", key);
-    e.dataTransfer.effectAllowed = "move";
-    dragRef.current = { key, source: { type: "slot", slotId } };
-    setTimeout(() => { setDragging(key); setDragSource({ type: "slot", slotId }); }, 0);
-  };
-  const onDragEnd = () => { dragRef.current = { key: null, source: null }; setDragging(null); setDragSource(null); setHoverSlot(null); };
-
-  const placeKey = (targetSlotId, sourceType, flatIdx, sourceSlotId, key) => {
-    const existing = placed[targetSlotId];
-    let newPlaced = { ...placed }; let newGroups;
-    if (sourceType === "tray") {
-      newGroups = removeTrayItem(flatIdx);
-      if (existing) newGroups = addTrayItemToGroups(newGroups, existing);
-      newPlaced[targetSlotId] = key;
-    } else if (sourceType === "slot") {
-      newGroups = { letters: [...trayGroups.letters], numbers: [...trayGroups.numbers], others: [...trayGroups.others] };
-      if (existing) { newPlaced[sourceSlotId] = existing; } else { delete newPlaced[sourceSlotId]; }
-      newPlaced[targetSlotId] = key;
-    }
-    setPlaced(newPlaced);
-    if (newGroups) setTrayGroups(newGroups);
-    playSound("place");
-  };
-
-  const onDropOnSlot = (slotId) => {
-    const d = dragRef.current;
-    if (!d.key || checked) return;
-    placeKey(slotId, d.source.type, d.source.flatIdx, d.source.slotId, d.key);
-    dragRef.current = { key: null, source: null };
-    setDragging(null); setDragSource(null); setHoverSlot(null);
-  };
-  const onDropOnTray = () => {
-    const d = dragRef.current;
-    if (!d.key || checked) return;
-    if (d.source.type === "slot") {
-      let np = { ...placed }; delete np[d.source.slotId]; setPlaced(np);
-      setTrayGroups(addTrayItem(d.key));
-    }
-    dragRef.current = { key: null, source: null };
-    setDragging(null); setDragSource(null);
-  };
-
-  const onTapTrayKey = (flatIdx, key) => {
-    if (checked || phase !== "playing") return;
-    if (selected && selected.type === "tray" && selected.flatIdx === flatIdx) { setSelected(null); return; }
-    if (selected && selected.type === "slot") {
-      let np = { ...placed }; let ng = removeTrayItem(flatIdx);
-      ng = addTrayItemToGroups(ng, selected.key); np[selected.slotId] = key;
-      setPlaced(np); setTrayGroups(ng); setSelected(null); playSound("place"); return;
-    }
-    setSelected({ type: "tray", flatIdx, key });
-  };
-  const onTapSlot = (slotId) => {
-    if (checked || phase !== "playing") return;
-    const pk = placed[slotId];
-    if (selected) {
-      if (selected.type === "tray") { placeKey(slotId, "tray", selected.flatIdx, null, selected.key); setSelected(null); }
-      else if (selected.type === "slot") {
-        if (selected.slotId === slotId) { setSelected(null); return; }
-        placeKey(slotId, "slot", null, selected.slotId, selected.key); setSelected(null);
-      }
-    } else if (pk) { setSelected({ type: "slot", slotId, key: pk }); }
-  };
-  const onTapTrayArea = () => {
-    if (selected && selected.type === "slot" && !checked) {
-      let np = { ...placed }; delete np[selected.slotId]; setPlaced(np);
-      setTrayGroups(addTrayItem(selected.key)); setSelected(null);
-    }
-  };
-
-  const checkAnswers = () => {
-    const r = {}; let correct = 0;
-    slots.forEach(s => {
-      const p = placed[s.id]; const ok = p === s.correctKey;
-      r[s.id] = p ? (ok ? "correct" : "incorrect") : "empty";
-      if (ok) correct++;
-    });
-    setResults(r); setChecked(true); setRunning(false);
-    clearInterval(intervalRef.current);
-    setScore({ correct, total: slots.length }); setSelected(null);
-    playSound("results");
-    if (correct === slots.length) {
-      if (!bestTimes[mode] || timer < bestTimes[mode]) setBestTimes(prev => ({ ...prev, [mode]: timer }));
-    }
-
-  };
-
-  const tryAgain = () => startGame(mode);
-  const rows = mode === "mac" ? MAC_ROWS : mode === "easy" ? EASY_ROWS : PC_ROWS;
-  const isMobile = typeof window !== "undefined" && window.innerWidth < 700;
-  const keySize = 52;
-  const scaledGap = 5 * scale;
-
-  // ---- TRAY KEY COMPONENT ----
-  function TrayKey({ keyLabel, flatIdx, scatterStyle, isSelected: isSel }) {
-    const w = getKeyWidth(keyLabel);
-    const keyW = Math.round(w * 52 * scale);
-    const keyH = Math.round(42 * scale);
-    const sty = scatterStyle || { rotation: 0, offX: 0, offY: 0 };
-    const tp = [];
-    if (isSel) tp.push("translateY(-3px) scale(1.05)");
-    tp.push("rotate("+sty.rotation+"deg) translate("+sty.offX+"px,"+sty.offY+"px)");
-    return (
-      <div draggable={!isMobile}
-        onDragStart={(e) => onDragStartFromTray(e, flatIdx, keyLabel)}
-        onDragEnd={onDragEnd}
-        onClick={(e) => { e.stopPropagation(); onTapTrayKey(flatIdx, keyLabel); }}
-        style={{
-          width: keyW, height: keyH, borderRadius: Math.round(7 * scale),
-          background: isSel ? "linear-gradient(180deg, #fff3c4 0%, #f5c542 100%)" : "linear-gradient(180deg, #fafafa 0%, #e8e8e8 40%, #d0d0d0 100%)",
-          color: C.capText, display: "flex", alignItems: "center", justifyContent: "center",
-          fontSize: Math.round((w > 1.5 ? 9 : 11) * Math.max(scale, 0.75)), fontWeight: 700,
-          cursor: "pointer", userSelect: "none",
-          boxShadow: isSel ? "0 4px 14px rgba(245,197,66,0.5), inset 0 1px 0 rgba(255,255,255,1)" : "0 4px 6px rgba(0,0,0,0.35), 0 1px 2px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.95), inset 0 -2px 3px rgba(0,0,0,0.08)",
-          letterSpacing: "0.5px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", padding: "0 4px",
-          transform: tp.join(" ") || "none", transition: "all 0.15s ease",
-          borderTop: "1px solid rgba(255,255,255,0.9)", borderBottom: "2px solid rgba(0,0,0,0.15)"
-        }}
-      >{keyLabel}</div>
-    );
-  }
-
-  // ---- 3D keycap style for board ----
-  function capStyle(w, result, isWrong, isSelected) {
-    return {
-      width: "calc(100% - 4px)", height: "calc(100% - 4px)", borderRadius: Math.round(6 * scale),
-      background: result === "correct" ? "linear-gradient(180deg, #6be89a 0%, #3dd47a 40%, #27ae60 100%)"
-        : isWrong ? "linear-gradient(180deg, #f47878 0%, #e05252 40%, #c0392b 100%)"
-        : isSelected ? "linear-gradient(180deg, #fff3c4 0%, #f5c542 100%)"
-        : "linear-gradient(180deg, #fafafa 0%, #e8e8e8 40%, #d0d0d0 100%)",
-      color: result ? "#fff" : C.capText,
-      display: "flex", alignItems: "center", justifyContent: "center",
-      fontSize: Math.round((w > 1.5 ? 11 : 13) * scale), fontWeight: 700,
-      boxShadow: isSelected ? "0 3px 10px rgba(245,197,66,0.5), inset 0 1px 0 rgba(255,255,255,1)"
-        : result === "correct" ? "0 3px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.4), inset 0 -2px 3px rgba(0,0,0,0.15)"
-        : isWrong ? "0 3px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.3), inset 0 -2px 3px rgba(0,0,0,0.15)"
-        : "0 4px 6px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.95), inset 0 -2px 3px rgba(0,0,0,0.08)",
-      textShadow: result ? "0 1px 2px rgba(0,0,0,0.3)" : "none",
-      userSelect: "none", letterSpacing: "0.5px",
-      borderTop: result ? "none" : "1px solid rgba(255,255,255,0.9)",
-      borderBottom: result ? "none" : "2px solid rgba(0,0,0,0.15)"
-    };
-  }
-
-  // ==================== START SCREEN ====================
-  if (phase === "menu") {
-    return (
-      <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center",
-        background: "linear-gradient(135deg, "+C.bg+" 0%, #0d1b2a 100%)", color: C.textLight, padding: "24px 20px 40px" }}>
-
-        {/* Logo */}
-        <div style={{ marginBottom: 8, marginTop: 12 }}>
-          <img src="logo.PNG" alt="Ektakto Games" style={{ height: "clamp(48px, 10vw, 80px)", width: "auto", objectFit: "contain" }} />
-        </div>
-
-        {/* Tagline */}
-        <p style={{ fontSize: "clamp(11px, 2.5vw, 14px)", color: C.textMuted, margin: "0 0 40px", letterSpacing: 2, textTransform: "uppercase" }}>
-          Brain Games &amp; Puzzles
-        </p>
-
-        {/* Featured Game Card */}
-        <div style={{
-          width: "100%", maxWidth: 580, background: "rgba(255,255,255,0.04)",
-          border: "1px solid rgba(255,255,255,0.1)", borderRadius: 20,
-          padding: "clamp(24px, 4vw, 36px)", textAlign: "center", marginBottom: 48,
-          boxShadow: "0 8px 40px rgba(0,0,0,0.3)"
-        }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginBottom: 4 }}>
-            <span style={{ fontSize: "clamp(10px, 2vw, 12px)", fontWeight: 700, textTransform: "uppercase",
-              letterSpacing: 2, color: C.accent, opacity: 0.9 }}>Featured Game</span>
-          </div>
-          <div style={{ fontSize: "clamp(36px, 8vw, 52px)", marginBottom: 4 }}>{"\u2328\uFE0F"}</div>
-          <h2 style={{ fontSize: "clamp(24px, 6vw, 36px)", fontWeight: 700, margin: "0 0 8px" }}>Keyboard Puzzle</h2>
-          <p style={{ fontSize: "clamp(13px, 3vw, 16px)", color: C.textMuted, margin: "0 0 28px", lineHeight: 1.6 }}>
-            All the keycaps fell off! Drag or tap each key back to its correct position. Think you know your layout?
-          </p>
-          {/* Easy Mode */}
-          <div style={{ marginBottom: 20 }}>
-            <button onClick={() => startGame("easy")} style={{
-              background: "linear-gradient(135deg, #1a6b3c, #27ae60)", color: "#fff", border: "none", borderRadius: 14,
-              padding: "18px 40px", cursor: "pointer", fontSize: 16, fontWeight: 600, boxShadow: "0 4px 20px rgba(39,174,96,0.35)",
-              display: "flex", flexDirection: "column", alignItems: "center", gap: 6, minWidth: 200, margin: "0 auto",
-              transition: "transform 0.15s ease"
-            }} onMouseEnter={e => e.currentTarget.style.transform="translateY(-2px)"} onMouseLeave={e => e.currentTarget.style.transform="none"}>
-              <span style={{ fontSize: 28 }}>{"🟢"}</span>
-              <span>Easy Mode</span>
-              <span style={{ fontSize: 11, fontWeight: 400, opacity: 0.85 }}>Letters &amp; Numbers only</span>
-              {bestTimes.easy && <span style={{ fontSize: 10, opacity: 0.7, marginTop: 2 }}>Best: {formatTime(bestTimes.easy)}</span>}
-            </button>
-          </div>
-
-          {/* Full Layouts divider */}
-          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
-            <div style={{ height: 1, flex: 1, background: "rgba(255,255,255,0.08)" }} />
-            <span style={{ fontSize: 10, color: C.textMuted, textTransform: "uppercase", letterSpacing: 1.5, whiteSpace: "nowrap" }}>Full Layout</span>
-            <div style={{ height: 1, flex: 1, background: "rgba(255,255,255,0.08)" }} />
-          </div>
-
-          <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
-            <button onClick={() => startGame("pc")} style={{
-              background: "linear-gradient(135deg, #1a5276, #2980b9)", color: "#fff", border: "none", borderRadius: 14,
-              padding: "22px 32px", cursor: "pointer", fontSize: 16, fontWeight: 600, boxShadow: "0 4px 20px rgba(41,128,185,0.3)",
-              display: "flex", flexDirection: "column", alignItems: "center", gap: 6, minWidth: 150, transition: "transform 0.15s ease"
-            }} onMouseEnter={e => e.currentTarget.style.transform="translateY(-2px)"} onMouseLeave={e => e.currentTarget.style.transform="none"}>
-              <span style={{ fontSize: 30 }}>{"\uD83D\uDDA5\uFE0F"}</span><span>PC Layout</span>
-              <span style={{ fontSize: 11, fontWeight: 400, opacity: 0.8 }}>Windows / Standard</span>
-              {bestTimes.pc && <span style={{ fontSize: 10, opacity: 0.7, marginTop: 2 }}>Best: {formatTime(bestTimes.pc)}</span>}
-            </button>
-            <button onClick={() => startGame("mac")} style={{
-              background: "linear-gradient(135deg, #2c3e50, #4a4a4a)", color: "#fff", border: "none", borderRadius: 14,
-              padding: "22px 32px", cursor: "pointer", fontSize: 16, fontWeight: 600, boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
-              display: "flex", flexDirection: "column", alignItems: "center", gap: 6, minWidth: 150, transition: "transform 0.15s ease"
-            }} onMouseEnter={e => e.currentTarget.style.transform="translateY(-2px)"} onMouseLeave={e => e.currentTarget.style.transform="none"}>
-              <span style={{ fontSize: 30 }}>{"\uD83C\uDF4E"}</span><span>Mac Layout</span>
-              <span style={{ fontSize: 11, fontWeight: 400, opacity: 0.8 }}>Apple / macOS</span>
-              {bestTimes.mac && <span style={{ fontSize: 10, opacity: 0.7, marginTop: 2 }}>Best: {formatTime(bestTimes.mac)}</span>}
-            </button>
-          </div>
-          {/* Sound toggle */}
-          <button onClick={() => setSoundOn(!soundOn)} style={{
-            marginTop: 24, background: "none", border: "1px solid rgba(255,255,255,0.12)",
-            color: C.textMuted, borderRadius: 8, padding: "5px 14px", cursor: "pointer", fontSize: 12
-          }}>{soundOn ? "\uD83D\uDD0A Sound On" : "\uD83D\uDD07 Sound Off"}</button>
-        </div>
-
-        {/* More Games Coming Soon */}
-        <div style={{ width: "100%", maxWidth: 700, textAlign: "center" }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12, marginBottom: 12 }}>
-            <div style={{ height: 1, flex: 1, maxWidth: 80, background: "rgba(255,255,255,0.1)" }} />
-            <span className="coming-soon-badge">Coming Soon</span>
-            <div style={{ height: 1, flex: 1, maxWidth: 80, background: "rgba(255,255,255,0.1)" }} />
-          </div>
-          <p style={{ fontSize: "clamp(12px, 2.5vw, 14px)", color: C.textMuted, lineHeight: 1.6 }}>
-            More games are on the way. Stay tuned!
-          </p>
-        </div>
-
-        {/* Footer */}
-        <div style={{ marginTop: 48, textAlign: "center", opacity: 0.4, fontSize: 12, color: C.textMuted }}>
-          <a href="https://ektakgames.com" target="_blank" rel="noopener noreferrer"
-            style={{ color: C.textMuted, textDecoration: "none" }}>ektakgames.com</a>
+  <div class="games">
+    <a class="card" href="keyboard-puzzle/">
+      <div class="thumb keyboard">
+        <div class="key-visual">
+          <span class="k">E</span><span class="k">K</span><span class="k">P</span>
         </div>
       </div>
-    );
-  }
-
-  // ==================== INTRO / FLYOFF PHASE ====================
-  if (phase === "intro" || phase === "flyoff") {
-    return (
-      <div style={{ minHeight: "100vh", background: "linear-gradient(135deg, "+C.bg+" 0%, #0d1b2a 100%)",
-        color: C.textLight, padding: "24px 12px 32px", display: "flex", flexDirection: "column", alignItems: "center" }}>
-        <img src="logo.PNG" alt="Ektakto Games" style={{ height: 36, width: "auto", objectFit: "contain", marginBottom: 16, opacity: 0.6 }} />
-        <h2 style={{ margin: "0 0 8px", fontSize: "clamp(18px, 4vw, 24px)", fontWeight: 600 }}>
-          {"\u2328\uFE0F"} {mode === "mac" ? "Mac" : mode === "easy" ? "Easy Mode" : "PC"} Keyboard Puzzle
-        </h2>
-        <div style={{ fontSize: 14, color: C.textMuted, marginBottom: 24 }}>
-          {phase === "intro" ? "Look at the keyboard..." : "Oh no! The keycaps flew off!"}
-        </div>
-        <div style={{
-          background: C.board, borderRadius: Math.round(16 * scale), padding: Math.round(12 * scale),
-          boxShadow: "0 8px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)",
-          border: "1px solid rgba(255,255,255,0.06)", maxWidth: "100%", overflow: "visible"
-        }}>
-          {rows.map((row, r) => (
-            <div key={r} style={{ display: "flex", gap: scaledGap, marginBottom: r < rows.length - 1 ? scaledGap : 0, justifyContent: "center" }}>
-              {row.map((key, c) => {
-                const slotId = r+"-"+c;
-                const w = getKeyWidth(key);
-                const fd = flyData[slotId];
-                const isFlyingOff = phase === "flyoff" && fd;
-                return (
-                  <div key={c} style={{
-                    width: Math.round(w * keySize * scale), height: Math.round(48 * scale),
-                    borderRadius: Math.round(8 * scale),
-                    background: C.slot, border: "2px solid rgba(255,255,255,0.08)",
-                    boxShadow: "inset 0 2px 4px rgba(0,0,0,0.3)",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    position: "relative", overflow: "visible"
-                  }}>
-                    <div
-                      className={isFlyingOff ? "fly-off-cap" : ""}
-                      style={{
-                        width: "calc(100% - 4px)", height: "calc(100% - 4px)",
-                        borderRadius: Math.round(6 * scale),
-                        background: "linear-gradient(180deg, #fafafa 0%, #e8e8e8 40%, #d0d0d0 100%)",
-                        color: C.capText, display: "flex", alignItems: "center", justifyContent: "center",
-                        fontSize: Math.round((w > 1.5 ? 11 : 13) * scale), fontWeight: 700,
-                        boxShadow: "0 4px 6px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.95), inset 0 -2px 3px rgba(0,0,0,0.08)",
-                        borderTop: "1px solid rgba(255,255,255,0.9)", borderBottom: "2px solid rgba(0,0,0,0.15)",
-                        userSelect: "none", letterSpacing: "0.5px",
-                        "--fx": isFlyingOff ? fd.fx+"px" : "0px",
-                        "--fy": isFlyingOff ? fd.fy+"px" : "0px",
-                        "--fr": isFlyingOff ? fd.fr+"deg" : "0deg",
-                        "--delay": isFlyingOff ? fd.delay+"s" : "0s"
-                      }}
-                    >{key}</div>
-                  </div>
-                );
-              })}
-            </div>
-          ))}
-        </div>
+      <div class="body">
+        <h2>Keyboard Puzzle</h2>
+        <p class="desc">Rebuild a scattered keyboard. Snap the keys back into place before time runs out.</p>
+        <span class="cta">Play</span>
       </div>
-    );
-  }
+    </a>
 
-  // ==================== GAME SCREEN ====================
-  const allPlaced = Object.keys(placed).length === slots.length;
-  const perfect = score && score.correct === score.total;
-  const selectedBorder = "2px solid " + C.selected;
-  const selectedShadow = "0 0 12px rgba(245,197,66,0.6)";
-  const lettersOffset = 0;
-  const numbersOffset = trayGroups.letters.length;
-  const othersOffset = trayGroups.letters.length + trayGroups.numbers.length;
-
-  return (
-    <div style={{ minHeight: "100vh", background: "linear-gradient(135deg, "+C.bg+" 0%, #0d1b2a 100%)",
-      color: C.textLight, padding: "16px 12px 32px", display: "flex", flexDirection: "column", alignItems: "center" }}>
-      {/* Header */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%", maxWidth: 960, marginBottom: 16, gap: 8 }}>
-        <button onClick={resetGame} style={{
-          background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.15)",
-          color: C.textLight, borderRadius: 10, padding: "6px 14px", cursor: "pointer", fontSize: 13, fontWeight: 500, whiteSpace: "nowrap",
-          display: "flex", alignItems: "center", gap: 6
-        }}>
-          <img src="logo.PNG" alt="" style={{ height: 16, width: "auto", opacity: 0.7 }} />
-          <span>{"\u2190"} Games</span>
-        </button>
-        <div style={{ textAlign: "center", flex: 1, minWidth: 0 }}>
-          <h2 style={{ margin: 0, fontSize: "clamp(16px, 4vw, 22px)", fontWeight: 600 }}>
-            {"\u2328\uFE0F"} {mode === "mac" ? "Mac" : mode === "easy" ? "Easy Mode" : "PC"} Keyboard Puzzle
-          </h2>
-          <div style={{ fontSize: 12, color: C.textMuted, marginTop: 2 }}>
-            {selected ? "Tap a slot to place the key" : tray.length + " keys remaining"}
-          </div>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <button onClick={() => setSoundOn(!soundOn)} style={{
-            background: "none", border: "none", color: C.textMuted, cursor: "pointer", fontSize: 18, padding: 4
-          }}>{soundOn ? "\uD83D\uDD0A" : "\uD83D\uDD07"}</button>
-          <div style={{
-            background: "rgba(255,255,255,0.1)", borderRadius: 10, padding: "6px 14px",
-            fontSize: 18, fontWeight: 600, fontVariantNumeric: "tabular-nums", textAlign: "center", whiteSpace: "nowrap"
-          }}>{formatTime(timer)}</div>
-        </div>
+    <a class="card" href="strait-sweeper/">
+      <div class="thumb strait">
+        <img src="strait-sweeper/logo.png" alt="Strait Sweeper">
       </div>
-
-      {/* Progress bar */}
-      <div style={{ width: "100%", maxWidth: 960, height: 5, borderRadius: 3, background: "rgba(255,255,255,0.1)", marginBottom: 16, overflow: "hidden" }}>
-        <div style={{
-          height: "100%", borderRadius: 3,
-          width: (Object.keys(placed).length / slots.length) * 100 + "%",
-          background: checked ? (perfect ? C.correct : "linear-gradient(90deg, "+C.correct+", "+C.incorrect+")") : "linear-gradient(90deg, "+C.accent+", #f5c542)",
-          transition: "width 0.3s ease"
-        }} />
+      <div class="body">
+        <h2>Strait Sweeper</h2>
+        <p class="desc">Minesweeper played over a satellite image of the Strait of Hormuz. Clear the water without hitting a mine.</p>
+        <span class="cta">Play</span>
       </div>
+    </a>
+  </div>
 
-      {/* Keyboard Board */}
-      <div style={{
-        background: C.board, borderRadius: Math.round(16 * scale), padding: Math.round(12 * scale),
-        boxShadow: "0 8px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)",
-        border: "1px solid rgba(255,255,255,0.06)", marginBottom: 20, maxWidth: "100%"
-      }}>
-        {rows.map((row, r) => (
-          <div key={r} style={{ display: "flex", gap: scaledGap, marginBottom: r < rows.length - 1 ? scaledGap : 0, justifyContent: "center" }}>
-            {row.map((key, c) => {
-              const slotId = r+"-"+c;
-              const w = getKeyWidth(key);
-              const pk = placed[slotId];
-              const result = results[slotId];
-              const isHov = hoverSlot === slotId && dragging;
-              const isSel = selected && selected.type === "slot" && selected.slotId === slotId;
-              const isWrong = result === "incorrect";
-              const correctKey = isWrong ? slots.find(s => s.id === slotId)?.correctKey : null;
-
-              let bg = C.slot, border = "2px dashed rgba(255,255,255,0.15)", shadow = "inset 0 2px 4px rgba(0,0,0,0.3)";
-              if (result === "correct") { bg = "rgba(46,204,113,0.25)"; border = "2px solid "+C.correct; shadow = "inset 0 2px 4px rgba(0,0,0,0.2), 0 0 12px rgba(46,204,113,0.3)"; }
-              else if (isWrong) { bg = "rgba(231,76,60,0.25)"; border = "2px solid "+C.incorrect; shadow = "inset 0 2px 4px rgba(0,0,0,0.2), 0 0 12px rgba(231,76,60,0.3)"; }
-              else if (isSel) { bg = C.slotHover; border = selectedBorder; shadow = selectedShadow; }
-              else if (isHov) { bg = C.slotHover; border = "2px dashed rgba(255,255,255,0.4)"; }
-              else if (selected && !pk) { bg = "rgba(245,197,66,0.08)"; border = "2px dashed rgba(245,197,66,0.3)"; }
-
-              return (
-                <div key={c} className={isWrong ? "slot-wrap" : ""}
-                  onClick={() => { if (!checked) onTapSlot(slotId); }}
-                  onMouseEnter={() => { if (isWrong) setHoveredWrong(slotId); }}
-                  onMouseLeave={() => { if (isWrong) setHoveredWrong(null); }}
-                  onTouchStart={() => { if (isWrong) setHoveredWrong(slotId); }}
-                  onTouchEnd={() => { if (isWrong) setTimeout(() => setHoveredWrong(null), 1500); }}
-                  onDragOver={e => { e.preventDefault(); setHoverSlot(slotId); }}
-                  onDragLeave={() => setHoverSlot(null)}
-                  onDrop={e => { e.preventDefault(); onDropOnSlot(slotId); }}
-                  style={{
-                    width: Math.round(w * keySize * scale), height: Math.round(48 * scale),
-                    borderRadius: Math.round(8 * scale), background: bg, border, boxShadow: shadow,
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    position: "relative", transition: "all 0.15s ease", cursor: "pointer"
-                  }}
-                >
-                  {pk && (
-                    <div draggable={!checked && !isMobile}
-                      onDragStart={(e) => { e.stopPropagation(); onDragStartFromSlot(e, slotId, pk); }}
-                      onDragEnd={onDragEnd}
-                      style={capStyle(w, result, isWrong, isSel)}
-                    >{pk}</div>
-                  )}
-                  {isWrong && <div className="tooltip" style={{ opacity: hoveredWrong === slotId ? 1 : undefined }}>Should be: {correctKey}</div>}
-                </div>
-              );
-            })}
-          </div>
-        ))}
-      </div>
-
-      {/* Score */}
-      {checked && score && (
-        <div style={{
-          textAlign: "center", marginBottom: 20, width: "100%", maxWidth: 500,
-          background: perfect ? "rgba(46,204,113,0.15)" : "rgba(255,255,255,0.05)",
-          border: "1px solid "+(perfect ? "rgba(46,204,113,0.3)" : "rgba(255,255,255,0.1)"),
-          borderRadius: 14, padding: "20px 24px"
-        }}>
-          <div style={{ fontSize: 32, marginBottom: 6 }}>{perfect ? "\uD83C\uDF89" : "\uD83E\uDD14"}</div>
-          <div style={{ fontSize: 26, fontWeight: 700 }}>{score.correct} / {score.total}</div>
-          <div style={{ fontSize: 14, color: C.textMuted, marginTop: 4 }}>
-            {perfect ? "Perfect! Completed in "+formatTime(timer) : Math.round((score.correct/score.total)*100)+"% correct \u2014 "+(score.total-score.correct)+" keys misplaced"}
-          </div>
-          {!perfect && <div style={{ fontSize: 12, color: C.textMuted, marginTop: 6, opacity: 0.7 }}>Hover or tap wrong keys to see the correct answer</div>}
-          <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 16, flexWrap: "wrap" }}>
-            <button onClick={tryAgain} style={{ background: C.accent, color: "#fff", border: "none", borderRadius: 10, padding: "10px 24px", cursor: "pointer", fontSize: 15, fontWeight: 600 }}>Try Again</button>
-            <button onClick={resetGame} style={{ background: "rgba(255,255,255,0.1)", color: C.textLight, border: "1px solid rgba(255,255,255,0.15)", borderRadius: 10, padding: "10px 24px", cursor: "pointer", fontSize: 15, fontWeight: 500 }}>All Games</button>
-          </div>
-        </div>
-      )}
-
-      {/* Action buttons */}
-      {!checked && (
-        <div style={{ display: "flex", gap: 10, marginBottom: 16, flexWrap: "wrap", justifyContent: "center" }}>
-          <button onClick={checkAnswers} disabled={!allPlaced} style={{
-            background: allPlaced ? "linear-gradient(135deg, "+C.accent+", #c0392b)" : "rgba(255,255,255,0.08)",
-            color: allPlaced ? "#fff" : "rgba(255,255,255,0.3)",
-            border: "none", borderRadius: 12, padding: "10px 28px",
-            cursor: allPlaced ? "pointer" : "not-allowed", fontSize: 15, fontWeight: 600,
-            boxShadow: allPlaced ? "0 4px 20px rgba(233,69,96,0.3)" : "none", transition: "all 0.2s ease"
-          }}>{"\u2713"} Check Answers</button>
-          <button onClick={tryAgain} style={{
-            background: "rgba(255,255,255,0.08)", color: C.textMuted, border: "1px solid rgba(255,255,255,0.1)",
-            borderRadius: 12, padding: "10px 20px", cursor: "pointer", fontSize: 13, fontWeight: 500
-          }}>Shuffle &amp; Restart</button>
-          {selected && <button onClick={() => setSelected(null)} style={{
-            background: "rgba(245,197,66,0.15)", color: C.selected, border: "1px solid rgba(245,197,66,0.3)",
-            borderRadius: 12, padding: "10px 20px", cursor: "pointer", fontSize: 13, fontWeight: 500
-          }}>Deselect</button>}
-        </div>
-      )}
-
-      {/* Key Tray */}
-      {!checked && (
-        <div onClick={onTapTrayArea} onDragOver={e => e.preventDefault()} onDrop={e => { e.preventDefault(); onDropOnTray(); }}
-          style={{ width: "100%", maxWidth: 960, minHeight: 100, background: C.tray, borderRadius: 16,
-            border: "2px dashed rgba(255,255,255,0.1)", padding: "16px 12px", display: "flex", flexDirection: "column", gap: 12 }}>
-          {tray.length === 0 && <div style={{ color: C.textMuted, fontSize: 14, padding: 16, textAlign: "center" }}>All keys placed! Click "Check Answers" to see how you did.</div>}
-
-          {trayGroups.letters.length > 0 && <div>
-            <div style={{ fontSize: 10, color: C.textMuted, marginBottom: 8, textTransform: "uppercase", letterSpacing: 1, paddingLeft: 4 }}>Letters</div>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "flex-start", padding: "4px 2px" }}>
-              {trayGroups.letters.map((key, i) => <TrayKey key={"l-"+key+"-"+i} keyLabel={key} flatIdx={lettersOffset+i} scatterStyle={letterScatter[i]}
-                isSelected={selected && selected.type === "tray" && selected.flatIdx === lettersOffset+i} />)}
-            </div>
-          </div>}
-
-          {trayGroups.numbers.length > 0 && <div>
-            <div style={{ fontSize: 10, color: C.textMuted, marginBottom: 8, textTransform: "uppercase", letterSpacing: 1, paddingLeft: 4 }}>Numbers</div>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "flex-start", padding: "4px 2px" }}>
-              {trayGroups.numbers.map((key, i) => <TrayKey key={"n-"+key+"-"+i} keyLabel={key} flatIdx={numbersOffset+i} scatterStyle={numberScatter[i]}
-                isSelected={selected && selected.type === "tray" && selected.flatIdx === numbersOffset+i} />)}
-            </div>
-          </div>}
-
-          {trayGroups.others.length > 0 && <div>
-            <div style={{ fontSize: 10, color: C.textMuted, marginBottom: 8, textTransform: "uppercase", letterSpacing: 1, paddingLeft: 4 }}>Other Keys</div>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 10, justifyContent: "flex-start", padding: "4px 2px" }}>
-              {trayGroups.others.map((key, i) => <TrayKey key={"o-"+key+"-"+i} keyLabel={key} flatIdx={othersOffset+i} scatterStyle={otherScatter[i]}
-                isSelected={selected && selected.type === "tray" && selected.flatIdx === othersOffset+i} />)}
-            </div>
-          </div>}
-        </div>
-      )}
-
-      {!checked && tray.length > 0 && (
-        <div style={{ color: C.textMuted, fontSize: 11, marginTop: 12, textAlign: "center", opacity: 0.6 }}>
-          {isMobile ? "Tap a key, then tap a slot to place it" : "Drag keys to slots, or tap to select and place"}
-        </div>
-      )}
-    </div>
-  );
-}
-
-ReactDOM.createRoot(document.getElementById("root")).render(<KeyboardPuzzle />);
-</script>
+  <footer>
+    More games coming. <a href="https://github.com/GentlemanAssassin/ektak-games">Source on GitHub</a>.
+  </footer>
+</div>
 </body>
 </html>
