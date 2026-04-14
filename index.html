@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ektak Games</title>
 <meta name="description" content="A small collection of browser puzzle games.">
-<link rel="icon" type="image/png" href="keyboard-puzzle/logo.png">
+<link rel="icon" href="Ektak-Icon.ico" type="image/x-icon">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&family=Share+Tech+Mono&display=swap" rel="stylesheet">
@@ -210,46 +210,18 @@ header { text-align: center; margin-bottom: 64px; }
 .card:hover .thumb-ss img { transform: scale(1.03); }
 
 .thumb-kp {
-  background: radial-gradient(ellipse at 50% 44%, #181410 0%, #060406 75%);
-  flex-direction: column;
-  gap: 11px;
-  padding: 30px;
+  background: #111;
+  overflow: hidden;
+  padding: 0;
 }
-
-.key-row { display: flex; gap: 8px; }
-
-.keycap {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 14px;
-  font-weight: 700;
-  color: #1c1c2c;
-  width: 46px;
-  height: 46px;
-  border-radius: 6px;
-  background: linear-gradient(175deg, #efefef 0%, #d6d6d6 55%, #bebebe 100%);
-  box-shadow:
-    0 5px 0 #7a7a7a,
-    0 7px 18px rgba(0,0,0,0.6),
-    inset 0 1px 0 rgba(255,255,255,0.92),
-    inset 0 -1px 0 rgba(0,0,0,0.08);
-  border: 1px solid rgba(0,0,0,0.16);
-  transform: perspective(320px) rotateX(18deg);
-  transition: transform 0.22s ease, box-shadow 0.22s ease;
+.thumb-kp img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 40%;
+  transition: transform 0.35s cubic-bezier(0.22,1,0.36,1);
 }
-.keycap.wide  { width: 68px; font-size: 10px; }
-.keycap.xl    { width: 116px; font-size: 10px; }
-.keycap.up    { transform: perspective(320px) rotateX(18deg) translateY(-9px); }
-
-.card:hover .keycap {
-  box-shadow:
-    0 5px 0 #8a8a8a,
-    0 9px 24px rgba(0,0,0,0.65),
-    inset 0 1px 0 rgba(255,255,255,0.92),
-    inset 0 -1px 0 rgba(0,0,0,0.08);
-}
+.card:hover .thumb-kp img { transform: scale(1.04); }
 
 /* CARD BODY */
 .card-body {
@@ -347,7 +319,7 @@ footer a:hover { color: var(--gold); }
 
   <header>
     <div class="brand-logo">
-      <img src="keyboard-puzzle/logo.png" alt="Ektak Games">
+      <img src="Ektak-logo.png" alt="Ektak Games">
     </div>
     <p class="tagline">Brain Games &amp; Puzzles</p>
   </header>
@@ -359,20 +331,7 @@ footer a:hover { color: var(--gold); }
     <a class="card" href="keyboard-puzzle/">
       <div class="card-inner">
         <div class="thumb thumb-kp">
-          <div class="key-row">
-            <div class="keycap up">Q</div>
-            <div class="keycap">W</div>
-            <div class="keycap up">E</div>
-            <div class="keycap">R</div>
-            <div class="keycap up">T</div>
-          </div>
-          <div class="key-row">
-            <div class="keycap wide up">Caps</div>
-            <div class="keycap">A</div>
-            <div class="keycap up">S</div>
-            <div class="keycap">D</div>
-            <div class="keycap xl">Space</div>
-          </div>
+          <img src="keyboard-puzzle/logo-game.png" alt="Keyboard Puzzle">
         </div>
         <div class="card-body">
           <div class="game-label">Puzzle</div>
