@@ -11,10 +11,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
 :root {
-  --ink:       #05070e;
-  --navy:      #0b1422;
-  --panel:     #111c2e;
-  --rail:      #1b2d46;
+  --ink:       #0e1420;
+  --navy:      #16213a;
+  --panel:     #1a2840;
+  --rail:      #253a58;
   --brass:     #c8902a;
   --gold:      #e8c55a;
   --parchment: #ddd0b0;
@@ -26,7 +26,7 @@
 html { scroll-behavior: smooth; }
 
 body {
-  background: var(--ink);
+  background: #131c2e;
   color: var(--parchment);
   font-family: 'Crimson Pro', Georgia, serif;
   min-height: 100vh;
@@ -83,10 +83,11 @@ header { text-align: center; margin-bottom: 64px; }
 
 .tagline {
   font-family: 'Cinzel', serif;
-  font-size: clamp(9px, 1.3vw, 12px);
-  letter-spacing: 5px;
+  font-size: clamp(13px, 1.8vw, 18px);
+  font-weight: 600;
+  letter-spacing: 4px;
   text-transform: uppercase;
-  color: var(--fog);
+  color: var(--parchment);
   margin-top: 18px;
   animation: fadeUp 1s 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
@@ -252,10 +253,10 @@ header { text-align: center; margin-bottom: 64px; }
 }
 
 .card-body p {
-  font-size: 17px;
-  line-height: 1.55;
-  color: var(--fog);
-  font-style: italic;
+  font-size: 19px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--parchment);
   flex: 1;
 }
 
@@ -350,7 +351,7 @@ footer a:hover { color: var(--gold); }
         <div class="card-body">
           <div class="game-label">Strategy</div>
           <h2>Strait Sweeper</h2>
-          <p>Minesweeper played over a satellite image of the Strait of Hormuz. Only the water is in play.</p>
+          <p>Find the mines in the Strait of Hormuz so we can get that oil flowing again!</p>
           <span class="play-btn">Play <span class="arr">&#8594;</span></span>
         </div>
       </div>
