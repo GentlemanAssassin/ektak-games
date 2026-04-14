@@ -12,16 +12,10 @@
 :root {
   --cols: 36;
   --rows: 28;
-  --ink:       #05070e;
-  --navy:      #0b1422;
-  --panel:     #111c2e;
-  --rail:      #1b2d46;
-  --brass:     #c8902a;
-  --gold:      #e8c55a;
-  --parchment: #ddd0b0;
-  --fog:       #8fa0b8;
-  --rust:      #b84c2a;
-  --safe:      #3a8c5a;
+  --win-gray: #c0c0c0;
+  --hi:  #ffffff;
+  --mid: #808080;
+  --lo:  #404040;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -32,27 +26,15 @@ html, body {
   font-family: 'Nunito', system-ui, sans-serif;
   min-height: 100vh;
   overflow-x: hidden;
-  position: relative;
-}
-
-/* Grid texture */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image:
-    repeating-linear-gradient(0deg,  transparent, transparent 79px, rgba(200,144,42,0.035) 80px),
-    repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(200,144,42,0.035) 80px);
-  pointer-events: none;
-  z-index: 0;
 }
 
 .wrap {
-  position: relative;
-  z-index: 1;
   max-width: 1220px;
   margin: 0 auto;
   padding: 20px 22px 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 /* BACK NAV */
@@ -65,135 +47,124 @@ body::before {
   font-weight: 700;
   color: #8fa8cc;
   text-decoration: none;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   transition: color 0.18s ease;
 }
-.back-link::before {
-  content: '←';
-  font-size: 16px;
-}
+.back-link::before { content: '←'; font-size: 16px; }
 .back-link:hover { color: #4a9fd4; }
 
 /* GAME LOGO */
 .logo {
   display: block;
-  max-width: 300px;
+  max-width: 260px;
   width: 100%;
   height: auto;
-  margin: 0 0 4px -8px;
+  margin: 0 0 14px -6px;
   filter: drop-shadow(0 4px 20px rgba(0,0,0,0.7));
 }
 
-.subtitle {
-  font-family: 'Nunito', sans-serif;
-  font-weight: 600;
-  color: #8fa8cc;
-  font-size: 15px;
-  margin-bottom: 16px;
+/* ═══════════════════════════════════════════════
+   CLASSIC WINDOWS CHROME
+═══════════════════════════════════════════════ */
+
+/* Outer window — the heavy raised border */
+.game-window {
+  background: var(--win-gray);
+  /* thick raised bevel */
+  border-top:    3px solid var(--hi);
+  border-left:   3px solid var(--hi);
+  border-bottom: 3px solid var(--lo);
+  border-right:  3px solid var(--lo);
+  box-shadow: inset -1px -1px 0 var(--mid), inset 1px 1px 0 #e0e0e0;
+  padding: 6px;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 6px;
+  align-self: flex-start;
+  width: min(1172px, 96vw);
 }
 
-/* HUD PANEL */
-.hud {
+/* ── HUD PANEL ─────────────────────────────── */
+.hud-panel {
+  /* sunken inset inside the window */
+  border-top:    2px solid var(--mid);
+  border-left:   2px solid var(--mid);
+  border-bottom: 2px solid var(--hi);
+  border-right:  2px solid var(--hi);
+  box-shadow: inset 1px 1px 0 var(--lo);
+  background: var(--win-gray);
+  padding: 6px 10px;
   display: flex;
   align-items: center;
-  gap: 0;
-  background: var(--panel);
-  border: 1px solid rgba(200,144,42,0.22);
-  border-radius: 2px;
-  padding: 0;
-  margin-bottom: 14px;
-  flex-wrap: wrap;
-  overflow: hidden;
-  box-shadow:
-    0 0 0 2px var(--navy),
-    0 0 0 3px rgba(200,144,42,0.08),
-    0 8px 32px rgba(0,0,0,0.45);
+  justify-content: space-between;
 }
 
-.stat {
-  display: flex;
-  align-items: center;
-  padding: 11px 20px;
-  border-right: 1px solid rgba(200,144,42,0.12);
-  gap: 10px;
-  font-variant-numeric: tabular-nums;
-}
-.stat:last-of-type { border-right: none; }
-
-.stat .label {
-  font-family: 'Nunito', sans-serif;
-  font-weight: 800;
-  color: #8fa8cc;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-}
-
-.stat .val {
+/* LED displays — mine counter & timer */
+.led {
   font-family: 'Share Tech Mono', monospace;
-  font-size: 20px;
-  color: #f5c842;
-  font-weight: 400;
-  min-width: 38px;
+  font-size: 32px;
+  line-height: 1;
+  color: #ff0000;
+  background: #000;
+  padding: 4px 8px 2px;
+  min-width: 68px;
   text-align: right;
-  text-shadow: 0 0 12px rgba(245,200,66,0.3);
+  letter-spacing: 3px;
+  /* sunken */
+  border-top:    2px solid var(--mid);
+  border-left:   2px solid var(--mid);
+  border-bottom: 2px solid var(--hi);
+  border-right:  2px solid var(--hi);
+  user-select: none;
 }
 
-/* Status text */
-.status {
-  font-family: 'Nunito', sans-serif;
-  font-weight: 700;
-  font-size: 14px;
-  letter-spacing: 0.3px;
-  padding: 11px 18px;
-  border-right: 1px solid rgba(255,255,255,0.07);
-}
-.status.playing { color: #8fa8cc; opacity: 0.8; }
-.status.won {
-  color: #5bba7f;
-  text-shadow: 0 0 14px rgba(58,140,90,0.45);
-  opacity: 1;
-  background: rgba(58,140,90,0.08);
-}
-.status.lost {
-  color: #e05a5a;
-  text-shadow: 0 0 14px rgba(184,76,42,0.45);
-  opacity: 1;
-  background: rgba(184,76,42,0.08);
-}
-
-/* New Game button */
-button.reset {
-  margin-left: auto;
-  background: #e8813a;
-  color: #fff;
-  border: none;
-  padding: 8px 20px;
-  margin: 6px;
-  border-radius: 50px;
+/* Smiley face reset button */
+.smiley-btn {
+  font-size: 22px;
+  line-height: 1;
+  background: var(--win-gray);
   cursor: pointer;
-  font-family: 'Nunito', sans-serif;
-  font-size: 14px;
-  font-weight: 800;
-  letter-spacing: 0.3px;
-  transition: filter 0.18s ease;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  /* raised */
+  border-top:    3px solid var(--hi);
+  border-left:   3px solid var(--hi);
+  border-bottom: 3px solid var(--lo);
+  border-right:  3px solid var(--lo);
+  box-shadow: inset -1px -1px 0 var(--mid), inset 1px 1px 0 #e8e8e8;
+  transition: none;
 }
-button.reset:hover { filter: brightness(1.12); }
+.smiley-btn:active {
+  border-top:    3px solid var(--lo);
+  border-left:   3px solid var(--lo);
+  border-bottom: 3px solid var(--hi);
+  border-right:  3px solid var(--hi);
+  box-shadow: inset 1px 1px 0 var(--mid);
+}
 
-/* BOARD */
+/* ── BOARD WRAPPER ─────────────────────────── */
+.board-wrapper {
+  /* sunken border around the board */
+  border-top:    3px solid var(--mid);
+  border-left:   3px solid var(--mid);
+  border-bottom: 3px solid var(--hi);
+  border-right:  3px solid var(--hi);
+  box-shadow: inset 1px 1px 0 var(--lo);
+  line-height: 0;
+  overflow: hidden;
+}
+
+/* ── BOARD ─────────────────────────────────── */
 .board-container {
   position: relative;
   display: inline-block;
   user-select: none;
-  border-radius: 2px;
-  overflow: hidden;
-  width: min(1160px, 95vw);
+  width: 100%;
   aspect-ratio: 2320 / 1860;
-  box-shadow:
-    0 0 0 1px rgba(200,144,42,0.2),
-    0 0 0 4px var(--navy),
-    0 0 0 5px rgba(200,144,42,0.08),
-    0 24px 60px rgba(0,0,0,0.7);
 }
 
 .board-img {
@@ -212,65 +183,95 @@ button.reset:hover { filter: brightness(1.12); }
   grid-template-rows: repeat(var(--rows), 1fr);
 }
 
+/* ── CELLS ─────────────────────────────────── */
 .cell {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: 'Share Tech Mono', monospace;
-  font-size: clamp(9px, 1.2vw, 15px);
-  font-weight: 400;
-  font-variant-numeric: tabular-nums;
+  font-size: clamp(9px, 1.15vw, 14px);
+  font-weight: 700;
   cursor: pointer;
-  transition: background 0.1s;
   line-height: 1;
+  user-select: none;
 }
+
+/* Land — fully transparent, no interaction */
 .cell.land { cursor: default; }
 
+/* Hidden water tile — classic raised gray square */
 .cell.water.hidden {
-  background: rgba(10, 24, 44, 0.58);
-  border: 1px solid rgba(200,144,42,0.1);
-  box-shadow: inset 1px 1px 0 rgba(255,255,255,0.06), inset -1px -1px 0 rgba(0,0,0,0.2);
+  background: var(--win-gray);
+  border-top:    2px solid var(--hi);
+  border-left:   2px solid var(--hi);
+  border-bottom: 2px solid var(--lo);
+  border-right:  2px solid var(--lo);
 }
 .cell.water.hidden:hover {
-  background: rgba(26, 46, 72, 0.52);
-  border-color: rgba(200,144,42,0.22);
+  background: #cacaca;
 }
+
+/* Revealed water tile — transparent so satellite shows through */
 .cell.water.revealed {
-  background: rgba(8, 16, 30, 0.8);
-  border: 1px solid rgba(200,144,42,0.06);
+  background: rgba(192, 192, 192, 0.18);
+  border: 1px solid rgba(128,128,128,0.25);
 }
+
+/* Revealed with number — slight backing for readability */
+.cell.water.revealed.has-num {
+  background: rgba(200, 200, 200, 0.55);
+}
+
+/* Flagged tile — still raised, shows flag */
 .cell.water.flagged {
-  background: rgba(10, 24, 44, 0.58);
-  border: 1px solid rgba(200,144,42,0.18);
+  background: var(--win-gray);
+  border-top:    2px solid var(--hi);
+  border-left:   2px solid var(--hi);
+  border-bottom: 2px solid var(--lo);
+  border-right:  2px solid var(--lo);
 }
-.cell.water.mine-blast { background: rgba(184,76,42,0.78); }
-.cell.water.mine-shown { background: rgba(40,15,12,0.78); }
 
-/* Number colors — naval instrument palette */
-.n1 { color: #7fc8ff; }
-.n2 { color: #7adfa0; }
-.n3 { color: #e07070; }
-.n4 { color: #b89aee; }
-.n5 { color: #e8a85a; }
-.n6 { color: #5eccc4; }
-.n7 { color: #d8dde4; }
-.n8 { color: #8fa0b8; }
+/* Mine states */
+.cell.water.mine-blast {
+  background: rgba(220, 30, 30, 0.85);
+  border: 1px solid rgba(200,0,0,0.4);
+}
+.cell.water.mine-shown {
+  background: rgba(192, 192, 192, 0.55);
+  border: 1px solid rgba(128,128,128,0.3);
+}
 
-/* FOOTER INSTRUCTIONS */
+/* ── NUMBER COLORS (classic minesweeper) ───── */
+.n1 { color: #0000ff; }
+.n2 { color: #007b00; }
+.n3 { color: #ff0000; }
+.n4 { color: #00007b; }
+.n5 { color: #7b0000; }
+.n6 { color: #007b7b; }
+.n7 { color: #000000; }
+.n8 { color: #7b7b7b; }
+
+/* Mine & flag glyphs */
+.mine-glyph { color: #000; font-size: 0.85em; }
+.flag-glyph { color: #cc0000; font-size: 0.85em; }
+.wrong-flag { color: #cc0000; font-size: 0.85em; }
+
+/* ── FOOTER ─────────────────────────────────── */
 .footer {
-  margin-top: 14px;
+  margin-top: 12px;
   font-family: 'Nunito', sans-serif;
   font-weight: 600;
   color: #8fa8cc;
-  font-size: 14px;
+  font-size: 13px;
   max-width: 720px;
   line-height: 1.6;
 }
 
-@media (max-width: 700px) {
-  .stat { padding: 9px 14px; }
-  .stat .val { font-size: 17px; }
+@media (max-width: 600px) {
+  .wrap { padding: 14px 10px 36px; }
+  .led { font-size: 24px; min-width: 52px; }
+  .smiley-btn { width: 32px; height: 32px; font-size: 18px; }
 }
 </style>
 </head>
@@ -278,28 +279,24 @@ button.reset:hover { filter: brightness(1.12); }
 <div class="wrap">
   <a href="../" class="back-link">Ektak Games</a>
   <img src="logo.png" alt="Strait Sweeper" class="logo">
-  <div class="subtitle">Minesweeper, but the board is the Strait of Hormuz. Only the water is playable.</div>
 
-  <div class="hud">
-    <div class="stat">
-      <span class="label">Mines</span>
-      <span class="val" id="mine-count">0</span>
-    </div>
-    <div class="stat">
-      <span class="label">Flags</span>
-      <span class="val" id="flag-count">0</span>
-    </div>
-    <div class="stat">
-      <span class="label">Time</span>
-      <span class="val" id="timer">0</span>
-    </div>
-    <div class="status playing" id="status">Good luck.</div>
-    <button class="reset" id="reset">New Game</button>
-  </div>
+  <div class="game-window">
 
-  <div class="board-container" id="board-container">
-    <img class="board-img" id="board-img" src="Strait_of_Hormuz_and_Musandam_Peninsula_(MODIS_2018-12-10).jpg" alt="Strait of Hormuz satellite image">
-    <div class="grid" id="grid"></div>
+    <!-- Classic HUD: mine counter | smiley | timer -->
+    <div class="hud-panel">
+      <div class="led" id="mine-count">076</div>
+      <button class="smiley-btn" id="reset" title="New Game">🙂</button>
+      <div class="led" id="timer">000</div>
+    </div>
+
+    <!-- Board -->
+    <div class="board-wrapper">
+      <div class="board-container" id="board-container">
+        <img class="board-img" id="board-img" src="Strait_of_Hormuz_and_Musandam_Peninsula_(MODIS_2018-12-10).jpg" alt="Strait of Hormuz satellite image">
+        <div class="grid" id="grid"></div>
+      </div>
+    </div>
+
   </div>
 
   <div class="footer">
@@ -342,11 +339,9 @@ button.reset:hover { filter: brightness(1.12); }
     "000000000000000000000000000000000000";
 
   const MINE_RATIO = 0.16;
-  const grid = document.getElementById('grid');
+  const gridEl = document.getElementById('grid');
   const mineCountEl = document.getElementById('mine-count');
-  const flagCountEl = document.getElementById('flag-count');
   const timerEl = document.getElementById('timer');
-  const statusEl = document.getElementById('status');
   const resetBtn = document.getElementById('reset');
 
   document.documentElement.style.setProperty('--cols', COLS);
@@ -363,6 +358,9 @@ button.reset:hover { filter: brightness(1.12); }
   let totalMines = 0;
   let timer = 0;
   let timerInterval = null;
+
+  function fmtMines(n) { return String(Math.max(-99, Math.min(999, n))).padStart(3, '0'); }
+  function fmtTimer(n) { return String(Math.min(999, n)).padStart(3, '0'); }
 
   function idx(r, c) { return r * COLS + c; }
   function isWater(r, c) {
@@ -385,7 +383,7 @@ button.reset:hover { filter: brightness(1.12); }
   }
 
   function buildBoard() {
-    grid.innerHTML = '';
+    gridEl.innerHTML = '';
     cells = [];
     cellEls = [];
     totalWater = 0;
@@ -403,31 +401,29 @@ button.reset:hover { filter: brightness(1.12); }
           el.addEventListener('touchstart', (e) => {
             pressTimer = setTimeout(() => { onFlag(r, c); pressTimer = null; }, 450);
           }, { passive: true });
-          el.addEventListener('touchend', (e) => {
+          el.addEventListener('touchend', () => {
             if (pressTimer) { clearTimeout(pressTimer); pressTimer = null; }
           });
           el.addEventListener('touchmove', () => {
             if (pressTimer) { clearTimeout(pressTimer); pressTimer = null; }
           });
         }
-        grid.appendChild(el);
+        gridEl.appendChild(el);
         cellEls.push(el);
         cells.push({ r, c, water, mine: false, revealed: false, flagged: false, adj: 0 });
       }
     }
 
     totalMines = Math.max(1, Math.round(totalWater * MINE_RATIO));
-    mineCountEl.textContent = totalMines;
-    flagCountEl.textContent = 0;
     flagCount = 0;
     revealedCount = 0;
     firstMove = true;
     gameOver = false;
     won = false;
     timer = 0;
-    timerEl.textContent = '0';
-    statusEl.textContent = 'Good luck.';
-    statusEl.className = 'status playing';
+    mineCountEl.textContent = fmtMines(totalMines);
+    timerEl.textContent = fmtTimer(0);
+    resetBtn.textContent = '🙂';
     stopTimer();
   }
 
@@ -450,7 +446,7 @@ button.reset:hover { filter: brightness(1.12); }
 
     const mineCount = Math.min(totalMines, waterIndices.length);
     totalMines = mineCount;
-    mineCountEl.textContent = totalMines;
+    mineCountEl.textContent = fmtMines(totalMines - flagCount);
 
     for (let i = 0; i < mineCount; i++) cells[waterIndices[i]].mine = true;
 
@@ -466,7 +462,10 @@ button.reset:hover { filter: brightness(1.12); }
 
   function startTimer() {
     if (timerInterval) return;
-    timerInterval = setInterval(() => { timer++; timerEl.textContent = timer; }, 1000);
+    timerInterval = setInterval(() => {
+      timer++;
+      timerEl.textContent = fmtTimer(timer);
+    }, 1000);
   }
   function stopTimer() {
     if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
@@ -498,20 +497,32 @@ button.reset:hover { filter: brightness(1.12); }
   function paintCell(r, c) {
     const cell = cells[idx(r, c)];
     const el = cellEls[idx(r, c)];
-    el.classList.remove('hidden', 'flagged');
+    el.className = 'cell ' + (cell.water ? 'water' : 'land');
+    el.textContent = '';
+    el.style.color = '';
+
+    if (!cell.water) return;
+
     if (cell.revealed) {
       el.classList.add('revealed');
-      if (cell.mine) { el.textContent = '\u2736'; }
-      else if (cell.adj > 0) { el.textContent = cell.adj; el.classList.add('n' + cell.adj); }
-      else { el.textContent = ''; }
+      if (cell.mine) {
+        const span = document.createElement('span');
+        span.className = 'mine-glyph';
+        span.textContent = '💣';
+        el.appendChild(span);
+      } else if (cell.adj > 0) {
+        el.classList.add('has-num');
+        el.classList.add('n' + cell.adj);
+        el.textContent = cell.adj;
+      }
     } else if (cell.flagged) {
       el.classList.add('flagged');
-      el.textContent = '\u2691';
-      el.style.color = '#e8a85a';
+      const span = document.createElement('span');
+      span.className = 'flag-glyph';
+      span.textContent = '🚩';
+      el.appendChild(span);
     } else {
       el.classList.add('hidden');
-      el.textContent = '';
-      el.style.color = '';
     }
   }
 
@@ -521,7 +532,7 @@ button.reset:hover { filter: brightness(1.12); }
     if (!cell.water || cell.revealed) return;
     cell.flagged = !cell.flagged;
     flagCount += cell.flagged ? 1 : -1;
-    flagCountEl.textContent = flagCount;
+    mineCountEl.textContent = fmtMines(totalMines - flagCount);
     paintCell(r, c);
   }
 
@@ -536,8 +547,12 @@ button.reset:hover { filter: brightness(1.12); }
           const el = cellEls[idx(r, c)];
           el.classList.add(r === blastR && c === blastC ? 'mine-blast' : 'mine-shown');
         } else if (!cell.mine && cell.flagged) {
-          cellEls[idx(r, c)].textContent = '\u2717';
-          cellEls[idx(r, c)].style.color = '#e07070';
+          const el = cellEls[idx(r, c)];
+          el.innerHTML = '';
+          const span = document.createElement('span');
+          span.className = 'wrong-flag';
+          span.textContent = '❌';
+          el.appendChild(span);
         }
       }
     }
@@ -548,18 +563,16 @@ button.reset:hover { filter: brightness(1.12); }
     won = didWin;
     stopTimer();
     if (didWin) {
-      statusEl.textContent = `Cleared in ${timer}s. Safe passage.`;
-      statusEl.className = 'status won';
+      resetBtn.textContent = '😎';
       for (let i = 0; i < cells.length; i++) {
         const cell = cells[i];
         if (cell.water && cell.mine && !cell.flagged) {
           cell.flagged = true; flagCount++; paintCell(cell.r, cell.c);
         }
       }
-      flagCountEl.textContent = flagCount;
+      mineCountEl.textContent = fmtMines(0);
     } else {
-      statusEl.textContent = 'Struck a mine.';
-      statusEl.className = 'status lost';
+      resetBtn.textContent = '😵';
     }
   }
 
