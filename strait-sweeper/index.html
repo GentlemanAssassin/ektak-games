@@ -7,7 +7,7 @@
 <link rel="icon" href="../Ektak-Icon.ico" type="image/x-icon">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,400;1,400&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
 :root {
   --cols: 36;
@@ -27,9 +27,9 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html, body {
-  background: var(--ink);
-  color: var(--parchment);
-  font-family: 'Share Tech Mono', monospace;
+  background: #0a1228;
+  color: #dce6f7;
+  font-family: 'Nunito', system-ui, sans-serif;
   min-height: 100vh;
   overflow-x: hidden;
   position: relative;
@@ -60,22 +60,19 @@ body::before {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  font-family: 'Cinzel', serif;
-  font-size: 11px;
-  letter-spacing: 2.5px;
-  text-transform: uppercase;
-  color: var(--fog);
+  font-family: 'Nunito', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #8fa8cc;
   text-decoration: none;
   margin-bottom: 16px;
   transition: color 0.18s ease;
-  opacity: 0.7;
 }
 .back-link::before {
   content: '←';
-  font-family: monospace;
-  font-size: 14px;
+  font-size: 16px;
 }
-.back-link:hover { color: var(--brass); opacity: 1; }
+.back-link:hover { color: #4a9fd4; }
 
 /* GAME LOGO */
 .logo {
@@ -88,12 +85,11 @@ body::before {
 }
 
 .subtitle {
-  font-family: 'Crimson Pro', serif;
-  font-style: italic;
-  color: var(--fog);
+  font-family: 'Nunito', sans-serif;
+  font-weight: 600;
+  color: #8fa8cc;
   font-size: 15px;
   margin-bottom: 16px;
-  letter-spacing: 0.2px;
 }
 
 /* HUD PANEL */
@@ -125,41 +121,42 @@ body::before {
 .stat:last-of-type { border-right: none; }
 
 .stat .label {
-  font-family: 'Cinzel', serif;
-  color: var(--fog);
-  font-size: 9px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  color: #8fa8cc;
+  font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: 2.5px;
-  opacity: 0.7;
+  letter-spacing: 1.5px;
 }
 
 .stat .val {
   font-family: 'Share Tech Mono', monospace;
   font-size: 20px;
-  color: var(--gold);
+  color: #f5c842;
   font-weight: 400;
   min-width: 38px;
   text-align: right;
-  text-shadow: 0 0 12px rgba(232,197,90,0.4);
+  text-shadow: 0 0 12px rgba(245,200,66,0.3);
 }
 
 /* Status text */
 .status {
-  font-family: 'Cinzel', serif;
-  font-size: 12px;
-  letter-spacing: 1.5px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.3px;
   padding: 11px 18px;
-  border-right: 1px solid rgba(200,144,42,0.12);
+  border-right: 1px solid rgba(255,255,255,0.07);
 }
-.status.playing { color: var(--fog); opacity: 0.6; }
+.status.playing { color: #8fa8cc; opacity: 0.8; }
 .status.won {
-  color: var(--safe);
+  color: #5bba7f;
   text-shadow: 0 0 14px rgba(58,140,90,0.45);
   opacity: 1;
   background: rgba(58,140,90,0.08);
 }
 .status.lost {
-  color: var(--rust);
+  color: #e05a5a;
   text-shadow: 0 0 14px rgba(184,76,42,0.45);
   opacity: 1;
   background: rgba(184,76,42,0.08);
@@ -168,22 +165,20 @@ body::before {
 /* New Game button */
 button.reset {
   margin-left: auto;
-  background: transparent;
-  color: var(--brass);
+  background: #e8813a;
+  color: #fff;
   border: none;
-  border-left: 1px solid rgba(200,144,42,0.18);
-  padding: 11px 22px;
+  padding: 8px 20px;
+  margin: 6px;
+  border-radius: 50px;
   cursor: pointer;
-  font-family: 'Cinzel', serif;
-  font-size: 11px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  transition: background 0.18s ease, color 0.18s ease;
+  font-family: 'Nunito', sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  transition: filter 0.18s ease;
 }
-button.reset:hover {
-  background: rgba(200,144,42,0.1);
-  color: var(--gold);
-}
+button.reset:hover { filter: brightness(1.12); }
 
 /* BOARD */
 .board-container {
@@ -265,15 +260,12 @@ button.reset:hover {
 /* FOOTER INSTRUCTIONS */
 .footer {
   margin-top: 14px;
-  font-family: 'Crimson Pro', serif;
-  font-style: italic;
-  color: var(--fog);
+  font-family: 'Nunito', sans-serif;
+  font-weight: 600;
+  color: #8fa8cc;
   font-size: 14px;
   max-width: 720px;
   line-height: 1.6;
-  opacity: 0.6;
-  border-left: 2px solid rgba(200,144,42,0.2);
-  padding-left: 14px;
 }
 
 @media (max-width: 700px) {

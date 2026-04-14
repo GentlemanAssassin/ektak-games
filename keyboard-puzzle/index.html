@@ -7,18 +7,15 @@
 <title>Keyboard Puzzle — Ektak Games</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,400;1,400&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    font-family: 'Share Tech Mono', 'SF Pro Display', monospace;
+    font-family: 'Nunito', system-ui, sans-serif;
     overflow-x: hidden;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
-    /* Nautical chart grid */
-    background-image:
-      repeating-linear-gradient(0deg,  transparent, transparent 79px, rgba(200,144,42,0.035) 80px),
-      repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(200,144,42,0.035) 80px);
+    background: #0a1228;
   }
   /* Back nav — visible above the React root */
   .page-nav {
@@ -36,16 +33,15 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    font-family: 'Cinzel', serif;
-    font-size: 10px;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    color: rgba(143,160,184,0.65);
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: rgba(143,168,204,0.8);
     text-decoration: none;
     transition: color 0.18s ease;
   }
-  .page-nav a::before { content: '←'; font-family: monospace; font-size: 13px; }
-  .page-nav a:hover { color: #c8902a; }
+  .page-nav a::before { content: '←'; font-size: 16px; }
+  .page-nav a:hover { color: #4a9fd4; }
   .tooltip {
     position: absolute; top: -32px; left: 50%; transform: translateX(-50%);
     background: rgba(0,0,0,0.85); color: #2ecc71; padding: 4px 10px;
@@ -193,10 +189,10 @@ function genFlyOffData(rows) {
 }
 
 const C = {
-  bg: "#05070e", board: "#0b1422", slot: "#111c2e", slotHover: "#192a40",
-  capText: "#12141e", correct: "#3a8c5a", incorrect: "#b84c2a",
-  accent: "#c8902a", textLight: "#ddd0b0", textMuted: "#8fa0b8", tray: "#03050a",
-  selected: "#e8c55a"
+  bg: "#0a1228", board: "#111e38", slot: "#162748", slotHover: "#1e3560",
+  capText: "#0a1228", correct: "#3a8c5a", incorrect: "#b84c2a",
+  accent: "#4a9fd4", textLight: "#dce6f7", textMuted: "#8fa8cc", tray: "#070f1f",
+  selected: "#f5c842"
 };
 
 // ==================== MAIN COMPONENT ====================
@@ -477,7 +473,7 @@ function KeyboardPuzzle() {
         </div>
 
         {/* Tagline */}
-        <p style={{ fontSize: "clamp(9px, 2vw, 11px)", color: C.textMuted, margin: "0 0 40px", letterSpacing: 5, textTransform: "uppercase", fontFamily: "'Cinzel', serif", opacity: 0.7 }}>
+        <p style={{ fontSize: "clamp(9px, 2vw, 11px)", color: C.textMuted, margin: "0 0 40px", letterSpacing: 5, textTransform: "uppercase", fontFamily: "'Nunito', sans-serif", fontWeight: 800 }}>
           Brain Games &amp; Puzzles
         </p>
 
@@ -489,11 +485,11 @@ function KeyboardPuzzle() {
           boxShadow: "0 8px 40px rgba(0,0,0,0.3)"
         }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginBottom: 4 }}>
-            <span style={{ fontSize: "clamp(9px, 1.8vw, 10px)", fontWeight: 400, textTransform: "uppercase",
-              letterSpacing: 4, color: C.accent, opacity: 0.75, fontFamily: "'Cinzel', serif" }}>Featured Game</span>
+            <span style={{ fontSize: "clamp(9px, 1.8vw, 10px)", fontWeight: 800, textTransform: "uppercase",
+              letterSpacing: 4, color: C.accent, fontFamily: "'Nunito', sans-serif" }}>Featured Game</span>
           </div>
           <div style={{ fontSize: "clamp(36px, 8vw, 52px)", marginBottom: 4 }}>{"\u2328\uFE0F"}</div>
-          <h2 style={{ fontSize: "clamp(22px, 5.5vw, 34px)", fontWeight: 600, margin: "0 0 8px", fontFamily: "'Cinzel', serif", letterSpacing: "0.5px" }}>Keyboard Puzzle</h2>
+          <h2 style={{ fontSize: "clamp(22px, 5.5vw, 34px)", fontWeight: 900, margin: "0 0 8px", fontFamily: "'Nunito', sans-serif", letterSpacing: "0px" }}>Keyboard Puzzle</h2>
           <p style={{ fontSize: "clamp(13px, 3vw, 16px)", color: C.textMuted, margin: "0 0 28px", lineHeight: 1.6 }}>
             All the keycaps fell off! Drag or tap each key back to its correct position. Think you know your layout?
           </p>
@@ -751,7 +747,7 @@ function KeyboardPuzzle() {
           {!perfect && <div style={{ fontSize: 12, color: C.textMuted, marginTop: 6, opacity: 0.7 }}>Hover or tap wrong keys to see the correct answer</div>}
           <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 16, flexWrap: "wrap" }}>
             <button onClick={tryAgain} style={{ background: C.accent, color: "#fff", border: "none", borderRadius: 10, padding: "10px 24px", cursor: "pointer", fontSize: 15, fontWeight: 600 }}>Try Again</button>
-            <button onClick={() => window.location.href='../'} style={{ background: "rgba(200,144,42,0.08)", color: C.accent, border: "1px solid rgba(200,144,42,0.3)", borderRadius: 10, padding: "10px 24px", cursor: "pointer", fontSize: 13, fontWeight: 400, fontFamily: "'Cinzel', serif", letterSpacing: "1.5px" }}>All Games</button>
+            <button onClick={() => window.location.href='../'} style={{ background: "rgba(74,159,212,0.1)", color: C.accent, border: "1px solid rgba(74,159,212,0.3)", borderRadius: 10, padding: "10px 24px", cursor: "pointer", fontSize: 14, fontWeight: 700, fontFamily: "'Nunito', sans-serif" }}>All Games</button>
           </div>
         </div>
       )}

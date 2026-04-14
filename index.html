@@ -4,56 +4,49 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ektak Games</title>
-<meta name="description" content="A small collection of browser puzzle games.">
+<meta name="description" content="Brain games and puzzles, right in your browser.">
 <link rel="icon" href="Ektak-Icon.ico" type="image/x-icon">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
 :root {
-  --ink:       #0e1420;
-  --navy:      #16213a;
-  --panel:     #1a2840;
-  --rail:      #253a58;
-  --brass:     #c8902a;
-  --gold:      #e8c55a;
-  --parchment: #ddd0b0;
-  --fog:       #8fa0b8;
-  --rust:      #b84c2a;
+  --bg:      #0a1228;
+  --surface: #111e38;
+  --lift:    #162748;
+  --border:  rgba(255,255,255,0.07);
+  --white:   #ffffff;
+  --light:   #dce6f7;
+  --muted:   #8fa8cc;
+  --blue:    #4a9fd4;
+  --orange:  #e8813a;
+  --gold:    #f5c842;
+  --green:   #5bba7f;
+  --pink:    #e85ac6;
+  --kp:      #4a9fd4;
+  --ss:      #e8813a;
 }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-
-body {
-  background: #131c2e;
-  color: var(--parchment);
-  font-family: 'Crimson Pro', Georgia, serif;
+html, body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: 'Nunito', system-ui, sans-serif;
   min-height: 100vh;
   overflow-x: hidden;
-  position: relative;
 }
 
-/* Nautical chart grid lines */
+/* Subtle radial glow behind logo */
 body::before {
   content: '';
   position: fixed;
-  inset: 0;
-  background-image:
-    repeating-linear-gradient(0deg,  transparent, transparent 79px, rgba(200,144,42,0.045) 80px),
-    repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(200,144,42,0.045) 80px);
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* Grain texture */
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23g)' opacity='0.5'/%3E%3C/svg%3E");
-  background-size: 300px 300px;
-  opacity: 0.028;
+  top: -10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 500px;
+  background: radial-gradient(ellipse, rgba(74,159,212,0.12) 0%, transparent 70%);
   pointer-events: none;
   z-index: 0;
 }
@@ -61,71 +54,70 @@ body::after {
 .page {
   position: relative;
   z-index: 1;
-  max-width: 1140px;
+  max-width: 1080px;
   margin: 0 auto;
-  padding: 60px 32px 80px;
+  padding: 52px 28px 80px;
 }
 
-/* HEADER */
-header { text-align: center; margin-bottom: 64px; }
+/* ── HEADER ─────────────────────────────── */
+header {
+  text-align: center;
+  margin-bottom: 16px;
+  animation: fadeDown 0.7s cubic-bezier(0.22,1,0.36,1) both;
+}
 
 .brand-logo img {
-  width: clamp(260px, 40vw, 500px);
+  width: clamp(260px, 48vw, 540px);
   height: auto;
-  filter: drop-shadow(0 0 40px rgba(200,144,42,0.22)) drop-shadow(0 8px 32px rgba(0,0,0,0.8));
-  animation: logoSettle 1.1s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-@keyframes logoSettle {
-  from { opacity: 0; transform: translateY(-16px) scale(0.97); }
-  to   { opacity: 1; transform: none; }
+  filter: drop-shadow(0 8px 40px rgba(74,159,212,0.3));
 }
 
 .tagline {
-  font-family: 'Cinzel', serif;
-  font-size: clamp(13px, 1.8vw, 18px);
-  font-weight: 600;
-  letter-spacing: 4px;
+  font-size: clamp(15px, 2vw, 20px);
+  font-weight: 800;
+  letter-spacing: 3px;
   text-transform: uppercase;
-  color: var(--parchment);
-  margin-top: 18px;
-  animation: fadeUp 1s 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+  color: var(--light);
+  margin-top: 14px;
 }
 
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: none; }
-}
-
-/* Ornamental rule */
-.rule {
+/* Divider */
+.divider {
   display: flex;
   align-items: center;
   gap: 14px;
-  max-width: 440px;
-  margin: 0 auto 60px;
-  animation: fadeUp 1s 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+  max-width: 500px;
+  margin: 24px auto 44px;
+  animation: fadeUp 0.7s 0.15s cubic-bezier(0.22,1,0.36,1) both;
 }
-.rule::before, .rule::after {
+.divider::before, .divider::after {
   content: '';
   flex: 1;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(200,144,42,0.4), transparent);
+  background: var(--border);
 }
-.rule-gem {
-  width: 6px; height: 6px;
-  background: var(--brass);
-  transform: rotate(45deg);
+.divider-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--muted);
   flex-shrink: 0;
-  box-shadow: 0 0 6px rgba(200,144,42,0.5);
 }
 
-/* GAMES GRID */
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ── GAME CARDS ─────────────────────────── */
 .games {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-  gap: 26px;
-  animation: fadeUp 1s 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  gap: 24px;
+  animation: fadeUp 0.7s 0.25s cubic-bezier(0.22,1,0.36,1) both;
 }
 
 .card {
@@ -133,185 +125,142 @@ header { text-align: center; margin-bottom: 64px; }
   flex-direction: column;
   text-decoration: none;
   color: inherit;
-  background: var(--panel);
-  border: 1px solid rgba(200,144,42,0.28);
-  border-radius: 3px;
-  overflow: visible;
-  position: relative;
-  transition: transform 0.28s cubic-bezier(0.22,1,0.36,1), border-color 0.28s ease, box-shadow 0.28s ease;
-  box-shadow:
-    0 0 0 3px var(--navy),
-    0 0 0 4px rgba(200,144,42,0.1),
-    0 20px 60px rgba(0,0,0,0.55);
-  clip-path: none;
+  background: var(--surface);
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  transition: transform 0.22s cubic-bezier(0.22,1,0.36,1),
+              box-shadow 0.22s ease,
+              border-color 0.22s ease;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.35);
 }
 
 .card:hover {
-  transform: translateY(-6px);
-  border-color: rgba(200,144,42,0.55);
-  box-shadow:
-    0 0 0 3px var(--navy),
-    0 0 0 4px rgba(200,144,42,0.24),
-    0 36px 90px rgba(0,0,0,0.7);
+  transform: translateY(-5px);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.5);
 }
 
-/* Corner bracket accent */
-.card-inner {
-  overflow: hidden;
-  border-radius: 2px;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  position: relative;
+.card-kp:hover { border-color: rgba(74,159,212,0.4); }
+.card-ss:hover { border-color: rgba(232,129,58,0.4); }
+
+/* Colored top stripe */
+.card-kp .stripe { background: linear-gradient(90deg, var(--blue), #67b8ea); }
+.card-ss .stripe { background: linear-gradient(90deg, var(--orange), #f5a55a); }
+.stripe {
+  height: 4px;
+  width: 100%;
+  flex-shrink: 0;
 }
 
-.card-inner::before, .card-inner::after {
-  content: '';
-  position: absolute;
-  width: 16px; height: 16px;
-  border-color: var(--brass);
-  border-style: solid;
-  opacity: 0.4;
-  z-index: 3;
-  pointer-events: none;
-  transition: opacity 0.28s ease;
-}
-.card-inner::before { top: 7px; left: 7px; border-width: 1px 0 0 1px; }
-.card-inner::after  { bottom: 7px; right: 7px; border-width: 0 1px 1px 0; }
-.card:hover .card-inner::before,
-.card:hover .card-inner::after { opacity: 1; }
-
-/* THUMBNAIL */
+/* Thumbnail */
 .thumb {
   position: relative;
-  height: 255px;
+  height: 250px;
+  overflow: hidden;
+  background: #080e1c;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
 }
 
-/* Bottom rule on thumb */
-.thumb::after {
-  content: '';
-  position: absolute;
-  bottom: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent 0%, rgba(200,144,42,0.28) 30%, rgba(200,144,42,0.28) 70%, transparent 100%);
-}
-
-.thumb-ss {
-  background: radial-gradient(ellipse at 38% 50%, #0e2e46 0%, #060d18 70%);
-}
-.thumb-ss img {
-  max-width: 92%;
-  max-height: 94%;
-  filter: drop-shadow(0 8px 28px rgba(0,0,0,0.7));
-  transition: transform 0.35s cubic-bezier(0.22,1,0.36,1);
-}
-.card:hover .thumb-ss img { transform: scale(1.03); }
-
-.thumb-kp {
-  background: #111;
-  overflow: hidden;
-  padding: 0;
-}
-.thumb-kp img {
+.thumb-kp img, .thumb-ss img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 40%;
-  transition: transform 0.35s cubic-bezier(0.22,1,0.36,1);
+  object-position: center;
+  transition: transform 0.3s cubic-bezier(0.22,1,0.36,1);
 }
-.card:hover .thumb-kp img { transform: scale(1.04); }
+.thumb-ss img {
+  object-fit: contain;
+  object-position: center;
+  padding: 16px;
+}
+.card:hover .thumb img { transform: scale(1.04); }
 
-/* CARD BODY */
+/* Card body */
 .card-body {
-  padding: 22px 24px 24px;
+  padding: 22px 24px 26px;
   display: flex;
   flex-direction: column;
   flex: 1;
 }
 
-.game-label {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 3px;
+.badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
-  color: var(--brass);
-  margin-bottom: 7px;
-  opacity: 0.8;
+  border-radius: 20px;
+  padding: 3px 12px;
+  margin-bottom: 10px;
+  width: fit-content;
 }
+.card-kp .badge { background: rgba(74,159,212,0.15); color: var(--blue); }
+.card-ss .badge { background: rgba(232,129,58,0.15); color: var(--orange); }
 
 .card-body h2 {
-  font-family: 'Cinzel', serif;
-  font-size: clamp(19px, 2.4vw, 25px);
-  font-weight: 600;
-  color: var(--parchment);
-  letter-spacing: 0.4px;
-  margin-bottom: 9px;
-  line-height: 1.15;
+  font-size: clamp(22px, 2.8vw, 28px);
+  font-weight: 900;
+  color: var(--white);
+  margin-bottom: 10px;
+  line-height: 1.1;
 }
 
 .card-body p {
-  font-size: 19px;
-  font-weight: 400;
-  line-height: 1.5;
-  color: var(--parchment);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.55;
+  color: var(--light);
   flex: 1;
 }
 
+/* Play button */
 .play-btn {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  margin-top: 20px;
-  padding: 9px 20px;
-  background: transparent;
-  border: 1px solid rgba(200,144,42,0.4);
-  color: var(--brass);
-  font-family: 'Cinzel', serif;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 2.5px;
-  text-transform: uppercase;
-  border-radius: 2px;
+  gap: 8px;
+  margin-top: 22px;
+  padding: 11px 24px;
+  border-radius: 50px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: filter 0.18s ease, transform 0.18s ease;
   align-self: flex-start;
-  transition: background 0.22s ease, border-color 0.22s ease, color 0.22s ease;
 }
-.play-btn .arr { transition: transform 0.22s ease; }
-.card:hover .play-btn {
-  background: rgba(200,144,42,0.1);
-  border-color: rgba(232,197,90,0.65);
-  color: var(--gold);
+.card-kp .play-btn {
+  background: var(--blue);
+  color: var(--white);
 }
-.card:hover .play-btn .arr { transform: translateX(5px); }
+.card-ss .play-btn {
+  background: var(--orange);
+  color: var(--white);
+}
+.card:hover .play-btn { filter: brightness(1.12); transform: translateX(3px); }
+.play-btn .arr { transition: transform 0.18s ease; }
+.card:hover .play-btn .arr { transform: translateX(4px); }
 
-/* FOOTER */
+/* ── FOOTER ─────────────────────────────── */
 footer {
-  margin-top: 80px;
+  margin-top: 64px;
   text-align: center;
-  position: relative;
-  z-index: 1;
-  animation: fadeUp 1s 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: fadeUp 0.7s 0.45s cubic-bezier(0.22,1,0.36,1) both;
 }
-footer .rule { margin-bottom: 20px; }
+footer .divider { margin: 0 auto 20px; }
 footer p {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 1.5px;
-  color: var(--fog);
-  opacity: 0.5;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
 }
-footer a { color: var(--brass); text-decoration: none; }
-footer a:hover { color: var(--gold); }
+footer a { color: var(--blue); text-decoration: none; }
+footer a:hover { color: var(--light); }
 
-@media (max-width: 640px) {
-  .page { padding: 36px 18px 56px; }
-  header { margin-bottom: 44px; }
+@media (max-width: 600px) {
+  .page { padding: 36px 16px 60px; }
   .thumb { height: 200px; }
-  .keycap { width: 36px; height: 36px; font-size: 11px; }
-  .keycap.wide { width: 54px; }
-  .keycap.xl   { width: 88px; }
 }
 </style>
 </head>
@@ -325,42 +274,40 @@ footer a:hover { color: var(--gold); }
     <p class="tagline">Brain Games &amp; Puzzles</p>
   </header>
 
-  <div class="rule"><div class="rule-gem"></div></div>
+  <div class="divider"><div class="divider-dot"></div></div>
 
   <div class="games">
 
-    <a class="card" href="keyboard-puzzle/">
-      <div class="card-inner">
-        <div class="thumb thumb-kp">
-          <img src="keyboard-puzzle/logo-game.png" alt="Keyboard Puzzle">
-        </div>
-        <div class="card-body">
-          <div class="game-label">Puzzle</div>
-          <h2>Keyboard Puzzle</h2>
-          <p>All the keycaps fell off. Drag or tap each key back to its correct position before time runs out.</p>
-          <span class="play-btn">Play <span class="arr">&#8594;</span></span>
-        </div>
+    <a class="card card-kp" href="keyboard-puzzle/">
+      <div class="stripe"></div>
+      <div class="thumb thumb-kp">
+        <img src="keyboard-puzzle/logo-game.png" alt="Keyboard Puzzle">
+      </div>
+      <div class="card-body">
+        <span class="badge">Puzzle</span>
+        <h2>Keyboard Puzzle</h2>
+        <p>All the keycaps fell off. Drag or tap each key back to its correct position before time runs out.</p>
+        <span class="play-btn">Play <span class="arr">&#8594;</span></span>
       </div>
     </a>
 
-    <a class="card" href="strait-sweeper/">
-      <div class="card-inner">
-        <div class="thumb thumb-ss">
-          <img src="strait-sweeper/logo.png" alt="Strait Sweeper">
-        </div>
-        <div class="card-body">
-          <div class="game-label">Strategy</div>
-          <h2>Strait Sweeper</h2>
-          <p>Find the mines in the Strait of Hormuz so we can get that oil flowing again!</p>
-          <span class="play-btn">Play <span class="arr">&#8594;</span></span>
-        </div>
+    <a class="card card-ss" href="strait-sweeper/">
+      <div class="stripe"></div>
+      <div class="thumb thumb-ss">
+        <img src="strait-sweeper/logo.png" alt="Strait Sweeper">
+      </div>
+      <div class="card-body">
+        <span class="badge">Strategy</span>
+        <h2>Strait Sweeper</h2>
+        <p>Find the mines in the Strait of Hormuz so we can get that oil flowing again!</p>
+        <span class="play-btn">Play <span class="arr">&#8594;</span></span>
       </div>
     </a>
 
   </div>
 
   <footer>
-    <div class="rule"><div class="rule-gem"></div></div>
+    <div class="divider"><div class="divider-dot"></div></div>
     <p>More games coming &nbsp;&bull;&nbsp; <a href="https://github.com/GentlemanAssassin/ektak-games">Source on GitHub</a></p>
   </footer>
 
