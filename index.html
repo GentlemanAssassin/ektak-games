@@ -37,19 +37,6 @@ html, body {
   overflow-x: hidden;
 }
 
-/* Subtle radial glow behind logo */
-body::before {
-  content: '';
-  position: fixed;
-  top: -10%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 800px;
-  height: 500px;
-  background: radial-gradient(ellipse, rgba(74,159,212,0.12) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
-}
 
 .page {
   position: relative;
@@ -69,7 +56,6 @@ header {
 .brand-logo img {
   width: clamp(260px, 48vw, 540px);
   height: auto;
-  filter: drop-shadow(0 8px 40px rgba(74,159,212,0.3));
 }
 
 .tagline {
@@ -249,14 +235,14 @@ footer {
   text-align: center;
   animation: fadeUp 0.7s 0.45s cubic-bezier(0.22,1,0.36,1) both;
 }
-footer .divider { margin: 0 auto 20px; }
+footer .divider { margin: 0 auto 28px; }
 footer p {
-  font-size: 13px;
-  font-weight: 600;
+  font-size: clamp(20px, 3vw, 28px);
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
   color: var(--muted);
 }
-footer a { color: var(--blue); text-decoration: none; }
-footer a:hover { color: var(--light); }
 
 @media (max-width: 600px) {
   .page { padding: 36px 16px 60px; }
@@ -308,7 +294,7 @@ footer a:hover { color: var(--light); }
 
   <footer>
     <div class="divider"><div class="divider-dot"></div></div>
-    <p>More games coming &nbsp;&bull;&nbsp; <a href="https://github.com/GentlemanAssassin/ektak-games">Source on GitHub</a></p>
+    <p>More Games Coming</p>
   </footer>
 
 </div>
