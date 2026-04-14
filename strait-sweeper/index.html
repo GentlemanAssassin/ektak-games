@@ -200,16 +200,16 @@ html, body {
 /* Land — fully transparent, no interaction */
 .cell.land { cursor: default; }
 
-/* Hidden water tile — classic raised gray square */
+/* Hidden water tile — water-tinted with classic raised bevel */
 .cell.water.hidden {
-  background: var(--win-gray);
-  border-top:    2px solid var(--hi);
-  border-left:   2px solid var(--hi);
-  border-bottom: 2px solid var(--lo);
-  border-right:  2px solid var(--lo);
+  background: rgba(10, 28, 55, 0.62);
+  border-top:    2px solid rgba(255,255,255,0.35);
+  border-left:   2px solid rgba(255,255,255,0.35);
+  border-bottom: 2px solid rgba(0,0,0,0.45);
+  border-right:  2px solid rgba(0,0,0,0.45);
 }
 .cell.water.hidden:hover {
-  background: #cacaca;
+  background: rgba(26, 52, 90, 0.58);
 }
 
 /* Revealed water tile — transparent so satellite shows through */
@@ -223,13 +223,13 @@ html, body {
   background: rgba(200, 200, 200, 0.55);
 }
 
-/* Flagged tile — still raised, shows flag */
+/* Flagged tile — water-tinted with raised bevel */
 .cell.water.flagged {
-  background: var(--win-gray);
-  border-top:    2px solid var(--hi);
-  border-left:   2px solid var(--hi);
-  border-bottom: 2px solid var(--lo);
-  border-right:  2px solid var(--lo);
+  background: rgba(10, 28, 55, 0.62);
+  border-top:    2px solid rgba(255,255,255,0.35);
+  border-left:   2px solid rgba(255,255,255,0.35);
+  border-bottom: 2px solid rgba(0,0,0,0.45);
+  border-right:  2px solid rgba(0,0,0,0.45);
 }
 
 /* Mine states */
