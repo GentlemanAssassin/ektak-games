@@ -121,12 +121,17 @@ const PC_ROWS = [
   ["Shift","Z","X","C","V","B","N","M",",",".","/","Shift"],
   ["Ctrl","Win","Alt","Space","Alt","Win","Menu","Ctrl"]
 ];
+// Easy mode uses the full PC layout, but only letter keys (A-Z) are
+// targetable. Non-letter keys render as inactive/"filled-in" caps so the
+// full keyboard is visible as context.
 const EASY_ROWS = [
-  ["1","2","3","4","5","6","7","8","9","0"],
-  ["Q","W","E","R","T","Y","U","I","O","P"],
-  ["A","S","D","F","G","H","J","K","L"],
-  ["Z","X","C","V","B","N","M"]
+  ["Esc","1","2","3","4","5","6","7","8","9","0","-","=","Backspace"],
+  ["Tab","Q","W","E","R","T","Y","U","I","O","P","[","]","\\"],
+  ["Caps","A","S","D","F","G","H","J","K","L",";","'","Enter"],
+  ["Shift","Z","X","C","V","B","N","M",",",".","/","Shift"],
+  ["Ctrl","Win","Alt","Space","Alt","Win","Menu","Ctrl"]
 ];
+const isEasyLocked = (key, mode) => mode === "easy" && !/^[A-Z]$/.test(key);
 const MAC_ROWS = [
   ["Esc","1","2","3","4","5","6","7","8","9","0","-","=","Delete"],
   ["Tab","Q","W","E","R","T","Y","U","I","O","P","[","]","\\"],
@@ -149,12 +154,16 @@ function shuffle(arr) {
   for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
   return a;
 }
-function buildSlots(rows) {
-  const s = []; rows.forEach((row, r) => row.forEach((key, c) => { s.push({ id: r+"-"+c, correctKey: key, row: r, col: c }); })); return s;
+function buildSlots(rows, mode) {
+  const s = []; rows.forEach((row, r) => row.forEach((key, c) => {
+    if (isEasyLocked(key, mode)) return; // non-letters are not slots in easy
+    s.push({ id: r+"-"+c, correctKey: key, row: r, col: c });
+  })); return s;
 }
-function buildGroupedKeycaps(rows) {
+function buildGroupedKeycaps(rows, mode) {
   const letters = [], numbers = [], others = [];
   rows.forEach(row => row.forEach(key => {
+    if (isEasyLocked(key, mode)) return; // non-letters don't go in the tray in easy
     if (/^[A-Z]$/.test(key)) letters.push(key);
     else if (/^[0-9]$/.test(key)) numbers.push(key);
     else others.push(key);
@@ -172,9 +181,10 @@ function genScatterStyles(count, seed) {
   return styles;
 }
 // Generate random fly-off destinations for each key
-function genFlyOffData(rows) {
+function genFlyOffData(rows, mode) {
   const data = {};
   rows.forEach((row, r) => row.forEach((key, c) => {
+    if (isEasyLocked(key, mode)) return; // locked keys stay put
     const id = r + "-" + c;
     const angle = Math.random() * Math.PI * 2;
     const dist = 300 + Math.random() * 500;
@@ -257,7 +267,7 @@ function KeyboardPuzzle() {
     SFX.init(); // preload sounds on user gesture
     const rows = m === "mac" ? MAC_ROWS : m === "easy" ? EASY_ROWS : PC_ROWS;
     setMode(m);
-    setSlots(buildSlots(rows));
+    setSlots(buildSlots(rows, m));
     setPlaced({});
     setTrayGroups({ letters: [], numbers: [], others: [] });
     scatterSeed.current = Math.floor(Math.random() * 10000);
@@ -268,14 +278,14 @@ function KeyboardPuzzle() {
     setPhase("intro");
     // Phase 2: after 2s, fly off
     setTimeout(() => {
-      setFlyData(genFlyOffData(rows));
+      setFlyData(genFlyOffData(rows, m));
       setPhase("flyoff");
       playSound("scatter");
     }, 2000);
     // Phase 3: after fly animation, start playing
     setTimeout(() => {
       setPhase("playing");
-      setTrayGroups(buildGroupedKeycaps(rows));
+      setTrayGroups(buildGroupedKeycaps(rows, m));
       setRunning(true);
     }, 3200);
   };
@@ -503,7 +513,7 @@ function KeyboardPuzzle() {
             }} onMouseEnter={e => e.currentTarget.style.transform="translateY(-2px)"} onMouseLeave={e => e.currentTarget.style.transform="none"}>
               <span style={{ fontSize: 28 }}>{"🟢"}</span>
               <span>Easy Mode</span>
-              <span style={{ fontSize: 11, fontWeight: 400, opacity: 0.85 }}>Letters &amp; Numbers only</span>
+              <span style={{ fontSize: 11, fontWeight: 400, opacity: 0.85 }}>Letters only</span>
               {bestTimes.easy && <span style={{ fontSize: 10, opacity: 0.7, marginTop: 2 }}>Best: {formatTime(bestTimes.easy)}</span>}
             </button>
           </div>
@@ -587,6 +597,7 @@ function KeyboardPuzzle() {
                 const w = getKeyWidth(key);
                 const fd = flyData[slotId];
                 const isFlyingOff = phase === "flyoff" && fd;
+                const locked = isEasyLocked(key, mode);
                 return (
                   <div key={c} style={{
                     width: Math.round(w * keySize * scale), height: Math.round(48 * scale),
@@ -597,20 +608,26 @@ function KeyboardPuzzle() {
                     position: "relative", overflow: "visible"
                   }}>
                     <div
-                      className={isFlyingOff ? "fly-off-cap" : ""}
+                      className={(!locked && isFlyingOff) ? "fly-off-cap" : ""}
                       style={{
                         width: "calc(100% - 4px)", height: "calc(100% - 4px)",
                         borderRadius: Math.round(6 * scale),
-                        background: "linear-gradient(180deg, #fafafa 0%, #e8e8e8 40%, #d0d0d0 100%)",
-                        color: C.capText, display: "flex", alignItems: "center", justifyContent: "center",
+                        background: locked
+                          ? "linear-gradient(180deg, #4a5568 0%, #3a4556 40%, #2d3543 100%)"
+                          : "linear-gradient(180deg, #fafafa 0%, #e8e8e8 40%, #d0d0d0 100%)",
+                        color: locked ? "rgba(255,255,255,0.35)" : C.capText,
+                        display: "flex", alignItems: "center", justifyContent: "center",
                         fontSize: Math.round((w > 1.5 ? 11 : 13) * scale), fontWeight: 700,
-                        boxShadow: "0 4px 6px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.95), inset 0 -2px 3px rgba(0,0,0,0.08)",
-                        borderTop: "1px solid rgba(255,255,255,0.9)", borderBottom: "2px solid rgba(0,0,0,0.15)",
-                        userSelect: "none", letterSpacing: "0.5px",
-                        "--fx": isFlyingOff ? fd.fx+"px" : "0px",
-                        "--fy": isFlyingOff ? fd.fy+"px" : "0px",
-                        "--fr": isFlyingOff ? fd.fr+"deg" : "0deg",
-                        "--delay": isFlyingOff ? fd.delay+"s" : "0s"
+                        boxShadow: locked
+                          ? "0 2px 3px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.08), inset 0 -1px 2px rgba(0,0,0,0.2)"
+                          : "0 4px 6px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.95), inset 0 -2px 3px rgba(0,0,0,0.08)",
+                        borderTop: locked ? "1px solid rgba(255,255,255,0.08)" : "1px solid rgba(255,255,255,0.9)",
+                        borderBottom: locked ? "2px solid rgba(0,0,0,0.35)" : "2px solid rgba(0,0,0,0.15)",
+                        userSelect: "none", letterSpacing: "0.5px", opacity: locked ? 0.7 : 1,
+                        "--fx": (!locked && isFlyingOff) ? fd.fx+"px" : "0px",
+                        "--fy": (!locked && isFlyingOff) ? fd.fy+"px" : "0px",
+                        "--fr": (!locked && isFlyingOff) ? fd.fr+"deg" : "0deg",
+                        "--delay": (!locked && isFlyingOff) ? fd.delay+"s" : "0s"
                       }}
                     >{key}</div>
                   </div>
@@ -691,6 +708,34 @@ function KeyboardPuzzle() {
               const isSel = selected && selected.type === "slot" && selected.slotId === slotId;
               const isWrong = result === "incorrect";
               const correctKey = isWrong ? slots.find(s => s.id === slotId)?.correctKey : null;
+              const locked = isEasyLocked(key, mode);
+
+              if (locked) {
+                return (
+                  <div key={c} style={{
+                    width: Math.round(w * keySize * scale), height: Math.round(48 * scale),
+                    borderRadius: Math.round(8 * scale),
+                    background: "rgba(255,255,255,0.02)", border: "2px solid rgba(255,255,255,0.04)",
+                    boxShadow: "inset 0 2px 4px rgba(0,0,0,0.25)",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    position: "relative", cursor: "default"
+                  }}>
+                    <div style={{
+                      width: "calc(100% - 4px)", height: "calc(100% - 4px)",
+                      borderRadius: Math.round(6 * scale),
+                      background: "linear-gradient(180deg, #4a5568 0%, #3a4556 40%, #2d3543 100%)",
+                      color: "rgba(255,255,255,0.35)",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      fontSize: Math.round((w > 1.5 ? 11 : 13) * scale), fontWeight: 700,
+                      boxShadow: "0 2px 3px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.08), inset 0 -1px 2px rgba(0,0,0,0.2)",
+                      borderTop: "1px solid rgba(255,255,255,0.08)",
+                      borderBottom: "2px solid rgba(0,0,0,0.35)",
+                      userSelect: "none", letterSpacing: "0.5px", opacity: 0.7,
+                      overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", padding: "0 4px"
+                    }}>{key}</div>
+                  </div>
+                );
+              }
 
               let bg = C.slot, border = "2px dashed rgba(255,255,255,0.15)", shadow = "inset 0 2px 4px rgba(0,0,0,0.3)";
               if (result === "correct") { bg = "rgba(46,204,113,0.25)"; border = "2px solid "+C.correct; shadow = "inset 0 2px 4px rgba(0,0,0,0.2), 0 0 12px rgba(46,204,113,0.3)"; }
