@@ -16,32 +16,88 @@
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
     background: #0a1228;
+    padding-top: 64px;
   }
-  /* Back nav — visible above the React root */
-  .page-nav {
+  /* ==================== Ektak Games site header ==================== */
+  .ektak-header {
     position: fixed;
     top: 0; left: 0; right: 0;
-    z-index: 9999;
-    padding: 10px 20px;
+    z-index: 10000;
     display: flex;
     align-items: center;
-    background: linear-gradient(to bottom, rgba(5,7,14,0.95) 0%, rgba(5,7,14,0) 100%);
-    pointer-events: none;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0 20px;
+    height: 64px;
+    background: rgba(7, 12, 28, 0.78);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    font-family: 'Nunito', system-ui, -apple-system, sans-serif;
   }
-  .page-nav a {
-    pointer-events: all;
+  .ektak-brand {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    font-family: 'Nunito', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    color: rgba(143,168,204,0.8);
     text-decoration: none;
-    transition: color 0.18s ease;
+    color: #e8eef5;
+    transition: transform 0.18s ease, filter 0.18s ease;
   }
-  .page-nav a::before { content: '←'; font-size: 16px; }
-  .page-nav a:hover { color: #4a9fd4; }
+  .ektak-brand:hover { filter: brightness(1.12); }
+  .ektak-brand:active { transform: scale(0.98); }
+  .ektak-brand-logo {
+    height: 38px;
+    width: auto;
+    display: block;
+    filter: drop-shadow(0 2px 10px rgba(0,0,0,0.4));
+  }
+  .ektak-other-game {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 16px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 999px;
+    text-decoration: none;
+    color: rgba(232,238,245,0.9);
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    white-space: nowrap;
+  }
+  /* KP page → link leads to Strait Sweeper (orange accent) */
+  .ektak-other-game.to-ss:hover {
+    background: rgba(232, 129, 58, 0.12);
+    border-color: rgba(232, 129, 58, 0.5);
+    color: #f0a06e;
+    transform: translateY(-1px);
+  }
+  .ektak-other-label {
+    color: rgba(143,168,204,0.85);
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+  }
+  .ektak-other-name {
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.2px;
+  }
+  .ektak-other-arrow {
+    font-size: 16px;
+    line-height: 1;
+    transition: transform 0.2s ease;
+  }
+  .ektak-other-game:hover .ektak-other-arrow { transform: translateX(3px); }
+  @media (max-width: 520px) {
+    body { padding-top: 56px; }
+    .ektak-header { height: 56px; padding: 0 14px; }
+    .ektak-brand-logo { height: 30px; }
+    .ektak-other-game { padding: 6px 12px; gap: 6px; }
+    .ektak-other-label { display: none; }
+    .ektak-other-name { font-size: 13px; }
+  }
+  /* ================================================================ */
   .tooltip {
     position: absolute; top: -32px; left: 50%; transform: translateX(-50%);
     background: rgba(0,0,0,0.85); color: #2ecc71; padding: 4px 10px;
@@ -84,7 +140,16 @@
 </style>
 </head>
 <body>
-<nav class="page-nav"><a href="../">Ektak Games</a></nav>
+<header class="ektak-header">
+  <a class="ektak-brand" href="../" aria-label="Ektak Games homepage">
+    <img class="ektak-brand-logo" src="../Ektak-logo.png" alt="Ektak Games">
+  </a>
+  <a class="ektak-other-game to-ss" href="../strait-sweeper/">
+    <span class="ektak-other-label">Also try</span>
+    <span class="ektak-other-name">Strait Sweeper</span>
+    <span class="ektak-other-arrow" aria-hidden="true">→</span>
+  </a>
+</header>
 <div id="root"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>

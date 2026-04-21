@@ -2,8 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Strait Sweeper</title>
+<title>Strait Sweeper — Ektak Games</title>
 <link rel="icon" type="image/png" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 <style>
   :root {
     --cols: 36;
@@ -19,6 +22,87 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
     min-height: 100vh;
   }
+  body { padding-top: 64px; }
+  /* ==================== Ektak Games site header ==================== */
+  .ektak-header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0 20px;
+    height: 64px;
+    background: rgba(7, 12, 28, 0.78);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    font-family: 'Nunito', system-ui, -apple-system, sans-serif;
+  }
+  .ektak-brand {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: #e8eef5;
+    transition: transform 0.18s ease, filter 0.18s ease;
+  }
+  .ektak-brand:hover { filter: brightness(1.12); }
+  .ektak-brand:active { transform: scale(0.98); }
+  .ektak-brand-logo {
+    height: 38px;
+    width: auto;
+    display: block;
+    filter: drop-shadow(0 2px 10px rgba(0,0,0,0.4));
+  }
+  .ektak-other-game {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 16px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 999px;
+    text-decoration: none;
+    color: rgba(232,238,245,0.9);
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    white-space: nowrap;
+  }
+  /* SS page → link leads to Keyboard Puzzle (blue accent) */
+  .ektak-other-game.to-kp:hover {
+    background: rgba(74, 159, 212, 0.12);
+    border-color: rgba(74, 159, 212, 0.5);
+    color: #7fc1e8;
+    transform: translateY(-1px);
+  }
+  .ektak-other-label {
+    color: rgba(143,168,204,0.85);
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+  }
+  .ektak-other-name {
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.2px;
+  }
+  .ektak-other-arrow {
+    font-size: 16px;
+    line-height: 1;
+    transition: transform 0.2s ease;
+  }
+  .ektak-other-game:hover .ektak-other-arrow { transform: translateX(3px); }
+  @media (max-width: 520px) {
+    body { padding-top: 56px; }
+    .ektak-header { height: 56px; padding: 0 14px; }
+    .ektak-brand-logo { height: 30px; }
+    .ektak-other-game { padding: 6px 12px; gap: 6px; }
+    .ektak-other-label { display: none; }
+    .ektak-other-name { font-size: 13px; }
+  }
+  /* ================================================================ */
   .wrap {
     max-width: 1200px;
     margin: 0 auto;
@@ -210,6 +294,16 @@
 </style>
 </head>
 <body>
+<header class="ektak-header">
+  <a class="ektak-brand" href="../" aria-label="Ektak Games homepage">
+    <img class="ektak-brand-logo" src="../Ektak-logo.png" alt="Ektak Games">
+  </a>
+  <a class="ektak-other-game to-kp" href="../keyboard-puzzle/">
+    <span class="ektak-other-label">Also try</span>
+    <span class="ektak-other-name">Keyboard Puzzle</span>
+    <span class="ektak-other-arrow" aria-hidden="true">→</span>
+  </a>
+</header>
 <div class="wrap">
   <img src="logo.png" alt="Strait Sweeper" class="logo">
   <div class="subtitle">Minesweeper, but the board is the Strait of Hormuz. Only the water is playable.</div>
