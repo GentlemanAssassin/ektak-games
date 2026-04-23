@@ -22,7 +22,7 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
     min-height: 100vh;
   }
-  body { padding-top: 64px; }
+  body { padding-top: 88px; }
   /* ==================== Ektak Games site header ==================== */
   .ektak-header {
     position: fixed;
@@ -33,7 +33,7 @@
     justify-content: space-between;
     gap: 12px;
     padding: 0 20px;
-    height: 64px;
+    height: 88px;
     background: rgba(7, 12, 28, 0.78);
     backdrop-filter: blur(14px) saturate(140%);
     -webkit-backdrop-filter: blur(14px) saturate(140%);
@@ -51,7 +51,7 @@
   .ektak-brand:hover { filter: brightness(1.12); }
   .ektak-brand:active { transform: scale(0.98); }
   .ektak-brand-logo {
-    height: 38px;
+    height: 68px;
     width: auto;
     display: block;
     filter: drop-shadow(0 2px 10px rgba(0,0,0,0.4));
@@ -95,9 +95,9 @@
   }
   .ektak-other-game:hover .ektak-other-arrow { transform: translateX(3px); }
   @media (max-width: 520px) {
-    body { padding-top: 56px; }
-    .ektak-header { height: 56px; padding: 0 14px; }
-    .ektak-brand-logo { height: 30px; }
+    body { padding-top: 72px; }
+    .ektak-header { height: 72px; padding: 0 14px; }
+    .ektak-brand-logo { height: 54px; }
     .ektak-other-game { padding: 6px 12px; gap: 6px; }
     .ektak-other-label { display: none; }
     .ektak-other-name { font-size: 13px; }
@@ -113,12 +113,18 @@
     font-size: 26px;
     letter-spacing: 0.5px;
   }
-  .logo {
-    display: block;
-    max-width: 320px;
-    width: 100%;
+  .board-logo {
+    position: absolute;
+    top: 2.5%;
+    right: 2.5%;
+    width: clamp(140px, 22%, 280px);
     height: auto;
-    margin: 0 0 6px -12px;
+    z-index: 5;
+    pointer-events: none;
+    filter: drop-shadow(0 4px 14px rgba(0,0,0,0.55));
+  }
+  @media (max-width: 600px) {
+    .board-logo { width: 28%; top: 2%; right: 2%; }
   }
   .subtitle {
     color: #8aa0b5;
@@ -305,8 +311,7 @@
   </a>
 </header>
 <div class="wrap">
-  <img src="logo.png" alt="Strait Sweeper" class="logo">
-  <div class="subtitle">Minesweeper, but the board is the Strait of Hormuz. Only the water is playable.</div>
+  <div class="subtitle">Help reopen the strait to keep gas prices down!</div>
 
   <div class="hud">
     <div class="stat">
@@ -327,6 +332,7 @@
 
   <div class="board-container" id="board-container">
     <img class="board-img" id="board-img" src="Strait_of_Hormuz_and_Musandam_Peninsula_(MODIS_2018-12-10).jpg" alt="Strait of Hormuz satellite image">
+    <img class="board-logo" src="logo.png" alt="Strait Sweeper">
     <div class="grid" id="grid"></div>
   </div>
 
@@ -344,8 +350,8 @@
     "000000000000000000000000000000000000" +
     "000000000000000000000000000000000000" +
     "000000000000000000011110000000000000" +
-    "000000000000000001011111000000000000" +
-    "000000000000000100011111100000000000" +
+    "000000000000000000011111000000000000" +
+    "000000000000000000011111100000000000" +
     "111111000000110011111111100000000000" +
     "111111110011111111111111100000000000" +
     "111111111111111111111111100000000000" +
